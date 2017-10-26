@@ -51,6 +51,10 @@ case, we assume that we have a non-volatile memory device mounted on
 	Loading input data
 	$
 
+NOTE: If the data is large enough, you may get errors regarding memory allocation.
+To define a larger memory pool, change the definition of the macro 
+`PM_MR_POOLSIZE` in pm\_mapreduce.hpp and recompile the program.
+
 Now we can run the program (in this case I use two threads for map and two
 threads for reduce workers). After some progress has been made, let's kill the
 job by pressing `Ctrl-C`:
