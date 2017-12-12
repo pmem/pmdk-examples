@@ -153,7 +153,7 @@ explicitly set, one thread is used as default:
 	$ cd pmemgrep_thx
 	$ make
 	...
-	$ ./pmemgrep /mnt/mem/grep.pool for dir_with_lots_of_files/ -nt=4
+	$ ./pmemgrep /mnt/mem/grep.pool pattern dir_with_lots_of_files/ -nt=4
 	...
 
 
