@@ -28,10 +28,10 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <task_list.hpp>
 
-task_list::task_list (nvml::obj::pool_base &pop)
+task_list::task_list (pmem::obj::pool_base &pop)
 {
 
-	nvml::obj::transaction::exec_tx (pop, [&] {
+	pmem::obj::transaction::exec_tx (pop, [&] {
 
 		head_map = nullptr;
 		head_red = nullptr;
@@ -40,13 +40,13 @@ task_list::task_list (nvml::obj::pool_base &pop)
 }
 
 void
-task_list::insert (nvml::obj::pool_base &pop,
-                   nvml::obj::persistent_ptr<list_entry> entry)
+task_list::insert (pmem::obj::pool_base &pop,
+                   pmem::obj::persistent_ptr<list_entry> entry)
 {
 
-	nvml::obj::persistent_ptr<list_entry> aux;
+	pmem::obj::persistent_ptr<list_entry> aux;
 
-	nvml::obj::transaction::exec_tx (pop, [&] {
+	pmem::obj::transaction::exec_tx (pop, [&] {
 
 		if (entry->get_task_type () == TASK_TYPE_MAP) {
 
@@ -74,10 +74,10 @@ task_list::insert (nvml::obj::pool_base &pop,
 }
 
 void
-task_list::clean_up_dirty_tasks (nvml::obj::pool_base &pop)
+task_list::clean_up_dirty_tasks (pmem::obj::pool_base &pop)
 {
 
-	nvml::obj::persistent_ptr<list_entry> itr = head_map;
+	pmem::obj::persistent_ptr<list_entry> itr = head_map;
 
 	while (itr != nullptr) {
 		if (itr->get_status () == TASK_ST_BUSY)
@@ -95,10 +95,10 @@ task_list::clean_up_dirty_tasks (nvml::obj::pool_base &pop)
 }
 
 int
-task_list::ret_map (nvml::obj::persistent_ptr<list_entry> &maptask)
+task_list::ret_map (pmem::obj::persistent_ptr<list_entry> &maptask)
 {
 
-	nvml::obj::persistent_ptr<list_entry> itr = head_map;
+	pmem::obj::persistent_ptr<list_entry> itr = head_map;
 
 	while (itr != nullptr) {
 
@@ -113,10 +113,10 @@ task_list::ret_map (nvml::obj::persistent_ptr<list_entry> &maptask)
 }
 
 int
-task_list::ret_red (nvml::obj::persistent_ptr<list_entry> &redtask)
+task_list::ret_red (pmem::obj::persistent_ptr<list_entry> &redtask)
 {
 
-	nvml::obj::persistent_ptr<list_entry> itr = head_red;
+	pmem::obj::persistent_ptr<list_entry> itr = head_red;
 
 	while (itr != nullptr) {
 
@@ -132,7 +132,7 @@ task_list::ret_red (nvml::obj::persistent_ptr<list_entry> &redtask)
 }
 
 int
-task_list::ret_last (nvml::obj::persistent_ptr<list_entry> &lasttask)
+task_list::ret_last (pmem::obj::persistent_ptr<list_entry> &lasttask)
 {
 
 	if (head_red == nullptr)
@@ -153,7 +153,7 @@ task_list::get_stats (size_t &t_tasks, size_t &t_map_tasks, size_t &c_tasks,
 	c_tasks = 0;
 	c_map_tasks = 0;
 
-	nvml::obj::persistent_ptr<list_entry> itr = head_map;
+	pmem::obj::persistent_ptr<list_entry> itr = head_map;
 	while (itr != nullptr) {
 
 		bool is_done = itr->get_status () == TASK_ST_DONE ? true : false;
@@ -185,7 +185,7 @@ bool
 task_list::all_red_done (void)
 {
 
-	nvml::obj::persistent_ptr<list_entry> itr = head_red;
+	pmem::obj::persistent_ptr<list_entry> itr = head_red;
 
 	while (itr != nullptr) {
 
@@ -202,7 +202,7 @@ bool
 task_list::all_map_done (void)
 {
 
-	nvml::obj::persistent_ptr<list_entry> itr = head_map;
+	pmem::obj::persistent_ptr<list_entry> itr = head_map;
 
 	while (itr != nullptr) {
 
@@ -223,7 +223,7 @@ task_list::only_one_left (void)
 	size_t num_busy = 0;
 	size_t num_done = 0;
 
-	nvml::obj::persistent_ptr<list_entry> itr = head_map;
+	pmem::obj::persistent_ptr<list_entry> itr = head_map;
 	while (itr != nullptr) {
 
 		num_total++;

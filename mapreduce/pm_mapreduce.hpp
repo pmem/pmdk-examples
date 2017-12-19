@@ -63,9 +63,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 /* root data structure for the PM pool file */
 struct root {
-	nvml::obj::mutex pmutex;
-	nvml::obj::condition_variable cond;
-	nvml::obj::persistent_ptr<persistent_string> input;
+	pmem::obj::mutex pmutex;
+	pmem::obj::condition_variable cond;
+	pmem::obj::persistent_ptr<persistent_string> input;
 	task_list tlist;
 };
 
@@ -86,7 +86,7 @@ class pm_mapreduce
 
 	/* RUNTIME VARIABLES */
 	struct program_params params;
-	nvml::obj::pool<root> pop;
+	pmem::obj::pool<root> pop;
 
 	/* METHODS */
 	/*
@@ -195,7 +195,7 @@ class pm_mapreduce
 	 * otherwise returns all_done=false).
 	 */
 	void
-	ret_available_map_task (nvml::obj::persistent_ptr<list_entry> &tsk,
+	ret_available_map_task (pmem::obj::persistent_ptr<list_entry> &tsk,
 	                        bool &all_done);
 
 	/*
@@ -207,7 +207,7 @@ class pm_mapreduce
 	 * (only_one_left=true) or not (only_one_left=false).
 	 */
 	void
-	ret_available_red_task (nvml::obj::persistent_ptr<list_entry> (&tsk)[2],
+	ret_available_red_task (pmem::obj::persistent_ptr<list_entry> (&tsk)[2],
 	                        bool &only_one_left, bool &all_done);
 
 	/*
@@ -215,14 +215,14 @@ class pm_mapreduce
 	 * virtual method "map" is called.
 	 */
 	void
-	process_map_task (nvml::obj::persistent_ptr<list_entry> tsk);
+	process_map_task (pmem::obj::persistent_ptr<list_entry> tsk);
 
 	/*
 	 * Process at least a reduce task. From this method, the user-defined
 	 * virtual method "reduce" is called.
 	 */
 	void
-	process_red_tasks (nvml::obj::persistent_ptr<list_entry> tsk[2],
+	process_red_tasks (pmem::obj::persistent_ptr<list_entry> tsk[2],
 	                   bool only_one_left);
 
 	/*

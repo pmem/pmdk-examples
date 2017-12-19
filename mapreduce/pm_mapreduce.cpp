@@ -85,9 +85,9 @@ pm_mapreduce::init_pm_pool (void)
 {
 	if (file_exists (params.pm_file) != 0) {
 		try {
-			pop = nvml::obj::pool<root>::create (
+			pop = pmem::obj::pool<root>::create (
 			params.pm_file, "MAPREDUCE", PM_MR_POOLSIZE, S_IRWXU);
-		} catch (const nvml::pool_error &e) {
+		} catch (const pmem::pool_error &e) {
 			std::string msg = "failed to create pool: ";
 			msg += std::string (e.what ());
 			error (msg);
@@ -111,9 +111,9 @@ pm_mapreduce::init_ex_pm_pool (void)
 		return 1;
 	} else {
 		try {
-			pop = nvml::obj::pool<root>::open (params.pm_file,
+			pop = pmem::obj::pool<root>::open (params.pm_file,
 			                                   "MAPREDUCE");
-		} catch (const nvml::pool_error &e) {
+		} catch (const pmem::pool_error &e) {
 			std::string msg = "failed to open pool: ";
 			msg += std::string (e.what ());
 			error (msg);
@@ -220,7 +220,7 @@ pm_mapreduce::write_results (void)
 	auto proot = pop.get_root ();
 	auto task_list = &(proot->tlist);
 
-	nvml::obj::persistent_ptr<list_entry> tsk;
+	pmem::obj::persistent_ptr<list_entry> tsk;
 	if (task_list->ret_last (tsk)) {
 		error ("there is not any tasks in the pool");
 		return;
@@ -307,9 +307,9 @@ pm_mapreduce::load_input_data (void)
 	}
 
 	/* persisting... */
-	nvml::obj::transaction::exec_tx (pop, [&] {
+	pmem::obj::transaction::exec_tx (pop, [&] {
 		proot->input
-		= nvml::obj::make_persistent<persistent_string> (pop);
+		= pmem::obj::make_persistent<persistent_string> (pop);
 		proot->input->set (pop, &lines);
 	}); /* end transaction */
 
@@ -338,10 +338,10 @@ pm_mapreduce::create_initial_tasks (void)
 	if (n_chunks == 0) /* empty input */
 		return 1;
 
-	nvml::obj::transaction::exec_tx (pop, [&] {
+	pmem::obj::transaction::exec_tx (pop, [&] {
 		/* Adding new MAP tasks to list */
 		for (size_t i = 0; i < n_chunks; i++) {
-			auto tsk = nvml::obj::make_persistent<list_entry> (pop);
+			auto tsk = pmem::obj::make_persistent<list_entry> (pop);
 			tsk->set_task_type (pop, TASK_TYPE_MAP);
 			size_t sb = lines_info[i * 2];
 			tsk->set_start_byte (pop, sb);
@@ -415,14 +415,14 @@ pm_mapreduce::join_threads (std::thread t[])
 }
 
 void
-pm_mapreduce::ret_available_map_task (nvml::obj::persistent_ptr<list_entry> &tsk,
+pm_mapreduce::ret_available_map_task (pmem::obj::persistent_ptr<list_entry> &tsk,
                                       bool &all_done)
 {
 	auto proot = pop.get_root ();
 	auto task_list = &(proot->tlist);
 
 	/* LOCKED TRANSACTION */
-	nvml::obj::transaction::exec_tx (
+	pmem::obj::transaction::exec_tx (
 	pop,
 	[&] {
 		all_done = false;
@@ -436,17 +436,17 @@ pm_mapreduce::ret_available_map_task (nvml::obj::persistent_ptr<list_entry> &tsk
 }
 
 void
-pm_mapreduce::process_map_task (nvml::obj::persistent_ptr<list_entry> tsk)
+pm_mapreduce::process_map_task (pmem::obj::persistent_ptr<list_entry> tsk)
 {
 	auto proot = pop.get_root ();
 	auto task_list = &(proot->tlist);
 
 	/*** MAIN TRANSACTION ***/
-	nvml::obj::transaction::exec_tx (pop, [&] {
+	pmem::obj::transaction::exec_tx (pop, [&] {
 		/* This is the reduce task that will
 		   be outputed */
-		nvml::obj::persistent_ptr<list_entry> new_red_tsk;
-		new_red_tsk = nvml::obj::make_persistent<list_entry> (pop);
+		pmem::obj::persistent_ptr<list_entry> new_red_tsk;
+		new_red_tsk = pmem::obj::make_persistent<list_entry> (pop);
 		new_red_tsk->set_task_type (pop, TASK_TYPE_REDUCE);
 
 		/* going over all lines and calling the
@@ -492,7 +492,7 @@ pm_mapreduce::process_map_task (nvml::obj::persistent_ptr<list_entry> tsk)
 		/* This locked transaction adds the lock to
 		   the main transaction from this point
 		   until the end */
-		nvml::obj::transaction::exec_tx (
+		pmem::obj::transaction::exec_tx (
 		pop,
 		[&] {
 			task_list->insert (pop, new_red_tsk);
@@ -517,7 +517,7 @@ pm_mapreduce::map_thread (void)
 	while (true) /* Active thread loop */
 	{
 		bool all_map_done = false;
-		nvml::obj::persistent_ptr<list_entry> tsk;
+		pmem::obj::persistent_ptr<list_entry> tsk;
 
 		ret_available_map_task (tsk, all_map_done);
 
@@ -530,14 +530,14 @@ pm_mapreduce::map_thread (void)
 }
 
 void pm_mapreduce::ret_available_red_task (
-nvml::obj::persistent_ptr<list_entry> (&tsk)[2], bool &only_one_left,
+pmem::obj::persistent_ptr<list_entry> (&tsk)[2], bool &only_one_left,
 bool &all_done)
 {
 	auto proot = pop.get_root ();
 	auto task_list = &(proot->tlist);
 
 	/* locked region */
-	std::unique_lock<nvml::obj::mutex> guard (proot->pmutex);
+	std::unique_lock<pmem::obj::mutex> guard (proot->pmutex);
 
 	proot->cond.wait (
 	proot->pmutex,
@@ -565,7 +565,7 @@ bool &all_done)
 		     || (tsk[0] == nullptr && all_done);
 	});
 
-	nvml::obj::transaction::exec_tx (pop, [&] {
+	pmem::obj::transaction::exec_tx (pop, [&] {
 		if (tsk[0] != nullptr)
 			tsk[0]->set_status (pop, TASK_ST_BUSY);
 		if (tsk[1] != nullptr)
@@ -577,18 +577,18 @@ bool &all_done)
 }
 
 void
-pm_mapreduce::process_red_tasks (nvml::obj::persistent_ptr<list_entry> tsk[2],
+pm_mapreduce::process_red_tasks (pmem::obj::persistent_ptr<list_entry> tsk[2],
                                  bool only_one_left)
 {
 	auto proot = pop.get_root ();
 	auto task_list = &(proot->tlist);
 
 	/*** MAIN TRANSACTION ***/
-	nvml::obj::transaction::exec_tx (pop, [&] {
+	pmem::obj::transaction::exec_tx (pop, [&] {
 
 		/* this is the reduce task that will be outputed */
-		nvml::obj::persistent_ptr<list_entry> new_red_tsk;
-		new_red_tsk = nvml::obj::make_persistent<list_entry> (pop);
+		pmem::obj::persistent_ptr<list_entry> new_red_tsk;
+		new_red_tsk = pmem::obj::make_persistent<list_entry> (pop);
 		new_red_tsk->set_task_type (pop, TASK_TYPE_REDUCE);
 		/* data for the new reduce task */
 		std::vector<std::string> allkeys;
@@ -672,7 +672,7 @@ pm_mapreduce::process_red_tasks (nvml::obj::persistent_ptr<list_entry> tsk[2],
 		/* this locked transaction adds the lock to
 		   the main transaction from this point
 		   until the end */
-		nvml::obj::transaction::exec_tx (
+		pmem::obj::transaction::exec_tx (
 		pop,
 		[&] {
 			task_list->insert (pop, new_red_tsk);
@@ -697,7 +697,7 @@ pm_mapreduce::reduce_thread (void)
 	{
 		bool only_one_left = false;
 		bool all_done = false;
-		nvml::obj::persistent_ptr<list_entry> tsk[2];
+		pmem::obj::persistent_ptr<list_entry> tsk[2];
 
 		ret_available_red_task (tsk, only_one_left, all_done);
 

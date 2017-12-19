@@ -25,13 +25,9 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
-CXX = g++
-RM = rm
-
 PROGS = wordcount
 
-override CXXFLAGS += `pkg-config --cflags libpmemobj++` -I./ -std=c++11
-override LDFLAGS += `pkg-config --libs libpmemobj++` -lpthread
+include ../common.mk
 
 OBJS = main.o helpers.o persistent_string.o list_entry.o task_list.o pm_mapreduce.o
 HEAD = pm_mapreduce.hpp task_list.hpp list_entry.hpp helpers.hpp persistent_string.hpp

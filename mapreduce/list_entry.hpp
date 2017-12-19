@@ -72,28 +72,28 @@ class list_entry
 	/* entry in the list */
 
 	/* pointer to next entry */
-	nvml::obj::persistent_ptr<list_entry> next;
+	pmem::obj::persistent_ptr<list_entry> next;
 
 	/* status of the task */
-	nvml::obj::p<uint8_t> status;
+	pmem::obj::p<uint8_t> status;
 
 	/* type of the task */
-	nvml::obj::p<uint8_t> task_type;
+	pmem::obj::p<uint8_t> task_type;
 
 	/* Start byte in the input data (only for MAP tasks) */
-	nvml::obj::p<size_t> start_byte;
+	pmem::obj::p<size_t> start_byte;
 
 	/* Number of file lines to process (only for MAP tasks) */
-	nvml::obj::p<size_t> n_lines;
+	pmem::obj::p<size_t> n_lines;
 
 	/* Pointer to Key-Value list (only for REDUCE tasks) */
-	nvml::obj::persistent_ptr<char[]> kv;
+	pmem::obj::persistent_ptr<char[]> kv;
 
 	/* size of the kv list */
-	nvml::obj::p<size_t> kv_size;
+	pmem::obj::p<size_t> kv_size;
 
 	/* total allocated bytes in PMEM for the kv list */
-	nvml::obj::p<size_t> alloc_bytes;
+	pmem::obj::p<size_t> alloc_bytes;
 
 	public:
 	/* NOTE: Since this is a persistent memory data structure,
@@ -104,7 +104,7 @@ class list_entry
 	*/
 
 	/* Constructor */
-	list_entry (nvml::obj::pool_base &pop);
+	list_entry (pmem::obj::pool_base &pop);
 
 	/* setters */
 
@@ -112,34 +112,34 @@ class list_entry
 	* Persistent pointer to the next entry in the list of tasks
 	*/
 	void
-	set_next (nvml::obj::pool_base &pop,
-	          nvml::obj::persistent_ptr<list_entry> next);
+	set_next (pmem::obj::pool_base &pop,
+	          pmem::obj::persistent_ptr<list_entry> next);
 
 	/*
 	* Set the status for this task
 	*/
 	void
-	set_status (nvml::obj::pool_base &pop, uint8_t status);
+	set_status (pmem::obj::pool_base &pop, uint8_t status);
 
 	/*
 	* Set the type for this task
 	*/
 	void
-	set_task_type (nvml::obj::pool_base &pop, uint8_t task_type);
+	set_task_type (pmem::obj::pool_base &pop, uint8_t task_type);
 
 	/*
 	* Set the start byte (offset) for the input data to define
 	* the CHUNK of data processed by a particular MAP task
 	*/
 	void
-	set_start_byte (nvml::obj::pool_base &pop, size_t s_byte);
+	set_start_byte (pmem::obj::pool_base &pop, size_t s_byte);
 
 	/*
 	* Set the number of lines from the input data to be processed by a MAP
 	* task
 	*/
 	void
-	set_n_lines (nvml::obj::pool_base &pop, size_t n);
+	set_n_lines (pmem::obj::pool_base &pop, size_t n);
 
 	/*
 	* Prepares an allocation of persistent memory of size "bytes"
@@ -150,7 +150,7 @@ class list_entry
 	* of allocations.
 	*/
 	void
-	allocate_kv (nvml::obj::pool_base &pop, size_t bytes);
+	allocate_kv (pmem::obj::pool_base &pop, size_t bytes);
 
 	/*
 	* Persists a key/value list stored as inputs "keys" and "values"
@@ -161,12 +161,12 @@ class list_entry
 	*
 	*/
 	void
-	add_to_kv (nvml::obj::pool_base &pop, std::vector<std::string> &keys,
+	add_to_kv (pmem::obj::pool_base &pop, std::vector<std::string> &keys,
 	           std::vector<size_t> &values);
 
 
 	/* getters */
-	nvml::obj::persistent_ptr<list_entry>
+	pmem::obj::persistent_ptr<list_entry>
 	get_next ()
 	{
 		return next;
@@ -196,7 +196,7 @@ class list_entry
 		return n_lines;
 	}
 
-	nvml::obj::persistent_ptr<char[]>
+	pmem::obj::persistent_ptr<char[]>
 	get_kv_array ()
 	{
 		return kv;
@@ -218,7 +218,7 @@ class list_entry
 	* when a task is done and its data is no longer needed but we want to
 	* keep the task as "done" for metadata stats and bookeeping. */
 	void
-	delete_kv (nvml::obj::pool_base &pop);
+	delete_kv (pmem::obj::pool_base &pop);
 };
 
 #endif

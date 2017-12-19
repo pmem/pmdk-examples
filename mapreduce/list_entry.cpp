@@ -28,10 +28,10 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <list_entry.hpp>
 
-list_entry::list_entry (nvml::obj::pool_base &pop)
+list_entry::list_entry (pmem::obj::pool_base &pop)
 {
 
-	nvml::obj::transaction::exec_tx (pop, [&] {
+	pmem::obj::transaction::exec_tx (pop, [&] {
 
 		this->next = nullptr;
 		this->status = TASK_ST_NEW;
@@ -46,11 +46,11 @@ list_entry::list_entry (nvml::obj::pool_base &pop)
 }
 
 void
-list_entry::set_next (nvml::obj::pool_base &pop,
-                      nvml::obj::persistent_ptr<list_entry> next)
+list_entry::set_next (pmem::obj::pool_base &pop,
+                      pmem::obj::persistent_ptr<list_entry> next)
 {
 
-	nvml::obj::transaction::exec_tx (pop, [&] {
+	pmem::obj::transaction::exec_tx (pop, [&] {
 
 		this->next = next;
 
@@ -58,10 +58,10 @@ list_entry::set_next (nvml::obj::pool_base &pop,
 }
 
 void
-list_entry::set_status (nvml::obj::pool_base &pop, uint8_t status)
+list_entry::set_status (pmem::obj::pool_base &pop, uint8_t status)
 {
 
-	nvml::obj::transaction::exec_tx (pop, [&] {
+	pmem::obj::transaction::exec_tx (pop, [&] {
 
 		this->status = status;
 
@@ -69,10 +69,10 @@ list_entry::set_status (nvml::obj::pool_base &pop, uint8_t status)
 }
 
 void
-list_entry::set_task_type (nvml::obj::pool_base &pop, uint8_t task_type)
+list_entry::set_task_type (pmem::obj::pool_base &pop, uint8_t task_type)
 {
 
-	nvml::obj::transaction::exec_tx (pop, [&] {
+	pmem::obj::transaction::exec_tx (pop, [&] {
 
 		this->task_type = task_type;
 
@@ -80,10 +80,10 @@ list_entry::set_task_type (nvml::obj::pool_base &pop, uint8_t task_type)
 }
 
 void
-list_entry::set_start_byte (nvml::obj::pool_base &pop, size_t s_byte)
+list_entry::set_start_byte (pmem::obj::pool_base &pop, size_t s_byte)
 {
 
-	nvml::obj::transaction::exec_tx (pop, [&] {
+	pmem::obj::transaction::exec_tx (pop, [&] {
 
 		this->start_byte = s_byte;
 
@@ -91,10 +91,10 @@ list_entry::set_start_byte (nvml::obj::pool_base &pop, size_t s_byte)
 }
 
 void
-list_entry::set_n_lines (nvml::obj::pool_base &pop, size_t n)
+list_entry::set_n_lines (pmem::obj::pool_base &pop, size_t n)
 {
 
-	nvml::obj::transaction::exec_tx (pop, [&] {
+	pmem::obj::transaction::exec_tx (pop, [&] {
 
 		this->n_lines = n;
 
@@ -102,23 +102,23 @@ list_entry::set_n_lines (nvml::obj::pool_base &pop, size_t n)
 }
 
 void
-list_entry::allocate_kv (nvml::obj::pool_base &pop, size_t bytes)
+list_entry::allocate_kv (pmem::obj::pool_base &pop, size_t bytes)
 {
 
-	nvml::obj::transaction::exec_tx (pop, [&] {
+	pmem::obj::transaction::exec_tx (pop, [&] {
 
-		kv = nvml::obj::make_persistent<char[]> (bytes);
+		kv = pmem::obj::make_persistent<char[]> (bytes);
 		alloc_bytes = bytes;
 
 	});
 }
 
 void
-list_entry::add_to_kv (nvml::obj::pool_base &pop, std::vector<std::string> &keys,
+list_entry::add_to_kv (pmem::obj::pool_base &pop, std::vector<std::string> &keys,
                        std::vector<size_t> &values)
 {
 
-	nvml::obj::transaction::exec_tx (pop, [&] {
+	pmem::obj::transaction::exec_tx (pop, [&] {
 
 		struct kv_tuple *kvt;
 		size_t offset = 0;
@@ -138,12 +138,12 @@ list_entry::add_to_kv (nvml::obj::pool_base &pop, std::vector<std::string> &keys
 }
 
 void
-list_entry::delete_kv (nvml::obj::pool_base &pop)
+list_entry::delete_kv (pmem::obj::pool_base &pop)
 {
 
-	nvml::obj::transaction::exec_tx (pop, [&] {
+	pmem::obj::transaction::exec_tx (pop, [&] {
 
-		nvml::obj::delete_persistent<char[]> (kv, alloc_bytes);
+		pmem::obj::delete_persistent<char[]> (kv, alloc_bytes);
 		kv = nullptr;
 		kv_size = 0;
 		alloc_bytes = 0;

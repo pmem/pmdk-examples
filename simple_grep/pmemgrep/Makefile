@@ -25,19 +25,10 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
-CXX = g++
-RM = rm
+include ../../common.mk
+include ../common.mk
 
 PROGS = pmemgrep
-
-# boost
-override CXXFLAGS += -I/usr/include/boost/
-override LDFLAGS += -lboost_system -lboost_filesystem
-
-# libpmemobj++
-override CXXFLAGS += `pkg-config --cflags libpmemobj++` -std=c++11
-override LDFLAGS += `pkg-config --libs libpmemobj++` -lpthread
-
 OBJS = pmemgrep.o
 
 %.o : %.cpp

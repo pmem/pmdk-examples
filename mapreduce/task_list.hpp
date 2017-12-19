@@ -41,14 +41,14 @@ class task_list
 	/*
 	 * Constructor
 	 */
-	task_list (nvml::obj::pool_base &pop);
+	task_list (pmem::obj::pool_base &pop);
 
 	/*
 	 * Inserts new element in the list
 	 */
 	void
-	insert (nvml::obj::pool_base &pop,
-	        nvml::obj::persistent_ptr<list_entry> entry);
+	insert (pmem::obj::pool_base &pop,
+	        pmem::obj::persistent_ptr<list_entry> entry);
 
 	/*
 	 * If a program was restarted after a crash, there
@@ -56,7 +56,7 @@ class task_list
 	 * This function makes sure the state is correct.
 	 */
 	void
-	clean_up_dirty_tasks (nvml::obj::pool_base &pop);
+	clean_up_dirty_tasks (pmem::obj::pool_base &pop);
 
 	/*
 	 * sets "maptask" to the first free and uncompleted Map task found in
@@ -64,7 +64,7 @@ class task_list
 	 * or any other error occur.
 	 */
 	int
-	ret_map (nvml::obj::persistent_ptr<list_entry> &maptask);
+	ret_map (pmem::obj::persistent_ptr<list_entry> &maptask);
 
 	/*
 	 * sets "redtask" to the first free and uncompleted Reduce tasks
@@ -72,14 +72,14 @@ class task_list
 	 * find any task or any other error occur.
 	 */
 	int
-	ret_red (nvml::obj::persistent_ptr<list_entry> &redtask);
+	ret_red (pmem::obj::persistent_ptr<list_entry> &redtask);
 
 	/*
 	 * sets "lastsk" to the last task in the list and returns 0.
 	 * Returns 1 if the list is empty
 	 */
 	int
-	ret_last (nvml::obj::persistent_ptr<list_entry> &lasttsk);
+	ret_last (pmem::obj::persistent_ptr<list_entry> &lasttsk);
 
 	/* Returns statistics about the job:
 	 *   t_tasks     -> Total tasks in the list
@@ -115,9 +115,9 @@ class task_list
 
 	private:
 	/* persistent pointer to a list of MAP tasks */
-	nvml::obj::persistent_ptr<list_entry> head_map;
+	pmem::obj::persistent_ptr<list_entry> head_map;
 	/* persistent pointer to a list of REDUCE tasks */
-	nvml::obj::persistent_ptr<list_entry> head_red;
+	pmem::obj::persistent_ptr<list_entry> head_red;
 };
 
 #endif

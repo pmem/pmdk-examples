@@ -55,7 +55,7 @@ class persistent_string
 {
 	public:
 	/* constructor */
-	persistent_string (nvml::obj::pool_base &pop);
+	persistent_string (pmem::obj::pool_base &pop);
 
 	/* returns a direct pointer to the data
 	*/
@@ -69,14 +69,14 @@ class persistent_string
 	 * PMEM
 	 */
 	void
-	reset (nvml::obj::pool_base &pop);
+	reset (pmem::obj::pool_base &pop);
 
 	/*
 	 * sets the value of the persistent string to "value". If
 	 * the string has any data it is freed first.
 	 */
 	void
-	set (nvml::obj::pool_base &pop, std::string *value);
+	set (pmem::obj::pool_base &pop, std::string *value);
 
 	private:
 	/* sso is used for very small strings (hence avoiding allocation
@@ -84,7 +84,7 @@ class persistent_string
 	char sso[SSO_SIZE];
 
 	/* persistent pointer to the string */
-	nvml::obj::persistent_ptr<char[]> str;
+	pmem::obj::persistent_ptr<char[]> str;
 };
 
 #endif

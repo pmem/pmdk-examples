@@ -44,8 +44,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 using namespace std;
 using namespace boost::filesystem;
-using namespace nvml;
-using namespace nvml::obj;
+using namespace pmem;
+using namespace pmem::obj;
 
 
 /* globals */
@@ -66,7 +66,7 @@ class file
 	persistent_ptr<file> next;
 	persistent_ptr<char[]> name;
 	p<time_t> mtime;
-	vector<line, nvml::obj::allocator<line>> lines;
+	vector<line, pmem::obj::allocator<line>> lines;
 
 	public:
 	file (const char *filename)

@@ -25,18 +25,10 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
-CXX = g++
-RM = rm
+include ../../common.mk
+include ../common.mk
 
 PROGS = grep
-
-# boost
-override CXXFLAGS += -I/usr/include/boost/
-override LDFLAGS += -lboost_system -lboost_filesystem
-
-# other
-override CXXFLAGS += -std=c++11
-
 OBJS = grep.o
 
 %.o : %.cpp

@@ -28,13 +28,13 @@
 SUBDIRS = mapreduce simple_grep
 
 all:
-	make -C nvml/
+	make -C pmdk/
 	for dir in $(SUBDIRS); do \
 		make -C $$dir; \
 	done
 
 library:
-	make -C nvml/
+	make -C pmdk/
 
 examples:
 	for dir in $(SUBDIRS); do \
@@ -42,7 +42,7 @@ examples:
 	done	
 
 clean:
-	make -C nvml clean
+	make -C pmdk clean
 	for dir in $(SUBDIRS); do \
 		make -C $$dir clean; \
 	done
