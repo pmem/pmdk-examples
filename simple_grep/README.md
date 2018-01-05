@@ -30,11 +30,7 @@ appropriately.
 
 After compilation, you can run the simple volatile grep like this:
 
-	$ cd grep
-	$ make
-	g++ -I/usr/include/boost/ -std=c++11 -c grep.cpp -o grep.o
-	g++ grep.o -lboost_system -lboost_filesystem -o grep
-	$
+	$ cd simple_grep/grep
 	$ ./grep int grep.cpp
 	FILE = grep.cpp
 	44: int
@@ -52,9 +48,7 @@ Let's run now the persistent version with with two patterns: "`int`" and
 "`void`".  This assumes that a PMEM device (real or emulated using RAM) is
 mounter at `/mnt/mem`:
 
-	$ cd pmemgrep
-	$ make
-	...
+	$ cd simple_grep/pmemgrep
 	$ ./pmemgrep /mnt/mem/grep.pool int pmemgrep.cpp
 	$ ./pmemgrep /mnt/mem/grep.pool void pmemgrep.cpp
 	$
@@ -149,9 +143,7 @@ the number of threads in the program. This number can be set with the command
 line option `-nt=number_of_threads` (passed as last argument).  If `-nt` is not
 explicitly set, one thread is used as default:
 
-	$ cd pmemgrep_thx
-	$ make
-	...
+	$ cd simple_grep/pmemgrep_thx
 	$ ./pmemgrep /mnt/mem/grep.pool pattern dir_with_lots_of_files/ -nt=4
 	...
 
