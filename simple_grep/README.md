@@ -12,20 +12,19 @@ aware synchronization. This version is located under `pmemgrep_thx/`.
 
 ### Build Instructions
 
-There is a Makefile provided for each version of the sample (in each
-subdirectory). To compile them, just `cd` to the appropiate directory and type
-`make`; NVML (libpmemobj is part of NVML) needs to be properly installed in
-your system, as well as a C++ compiler and the C++ Boost Library
-(http://boost.org). The default C++ compiler used is `g++`.  You can change
-that by setting the `CXX` variable in the Makefile.
+To build this sample, download/clone the [pmdk-examples
+repository](https://github.com/pmem/pmdk-examples).  A Makefile is provided. To
+compile this sample, just type `make simple_grep` from the root directory of
+the repository; a C++ compiler and the C++ Boost Library (http://boost.org. In
+ubuntu 16.04 you can install the package `libboost-all-dev`) needs to be
+properly installed in your system. The default C++ compiler used is `g++`. You
+can change that by setting the `CXX` variable in `common.mk`. Alternatively,
+you can build all samples by typing `make`.
 
-If compilation fails (in linux) because pkg-config cannot find the
-configuration files for NVML, you may need to set the `PKG_CONFIG_PATH`
-variable before doing make.  If you installed NVML with the default
-configuration, these files will probably be either in
-`/usr/local/lib/pkgconfig` or `/usr/local/lib64/pkgconfig`.
-
-	$ export PKG_CONFIG_PATH=/usr/local/lib64/pkgconfig:$PKG_CONFIG_PATH
+The build process will compile and use the latest master branch version of PMDK
+(libpmemobj is part of PMDK). If you want to use a custom installed version of
+PMDK, you can change the `CXXFLAGS` and `LDFLAGS` variables in `common.mk`
+appropriately.
 
 ### How to Run
 

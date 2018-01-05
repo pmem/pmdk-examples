@@ -26,10 +26,14 @@
 
 
 include ../../common.mk
-include ../common.mk
 
 PROGS = grep
 OBJS = grep.o
+
+# boost
+override CXXFLAGS += -I/usr/include/boost/
+override LDFLAGS += -lboost_system -lboost_filesystem
+#
 
 %.o : %.cpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@

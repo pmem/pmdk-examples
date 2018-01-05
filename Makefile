@@ -27,24 +27,25 @@
 
 SUBDIRS = mapreduce simple_grep
 
-all:
-	make -C pmdk/
-	for dir in $(SUBDIRS); do \
-		make -C $$dir; \
-	done
+.PHONY: library examples mapreduce simple_grep all clean
 
-library:
+all: examples
+
+library:	
+	cd pmdk/ && git pull && git submodule init && git submodule update --recursive
 	make -C pmdk/
 
-examples:
-	for dir in $(SUBDIRS); do \
-		make -C $$dir; \
-	done	
+examples: mapreduce simple_grep 
+
+mapreduce: library
+	make -C mapreduce
+
+simple_grep: library
+	make -C simple_grep
 
 clean:
 	make -C pmdk clean
 	for dir in $(SUBDIRS); do \
 		make -C $$dir clean; \
 	done
-	
 

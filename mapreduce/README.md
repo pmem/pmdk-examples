@@ -12,19 +12,22 @@ checkpoint/restart mechanism.
 
 ### Build Instructions
 
-There is a Makefile provided by the sample. To compile the sample, just type
-`make`; PMDK (libpmemobj is part of PMDK) needs to be properly installed in
-your system, as well as a C++ compiler. The default C++ compiler used is `g++`.
-You can change that by setting the `CXX` variable in the Makefile.
+To build this sample, download/clone the [pmdk-examples
+repository](https://github.com/pmem/pmdk-examples).  A Makefile is provided. To
+compile this sample, just type `make mapreduce` from the root directory of the
+repository; a C++ compiler needs to be properly installed in your system. The
+default C++ compiler used is `g++`. You can change that by setting the `CXX`
+variable in `common.mk`. Alternatively, you can build all samples by typing
+`make`.  For this, you need to install the following extra dependencies used by
+other samples:
 
-If compilation fails because pkg-config cannot find the configuration files
-for PMDK, you may need to set the `PKG_CONFIG_PATH` variable before doing make.
-If you installed PMDK with the default configuration, these files will probably
-be either in `/usr/local/lib/pkgconfig` or `/usr/local/lib64/pkgconfig`.
+ - Boost C++ Library Collection (in ubuntu 16.04 you can install the package
+   `libboost-all-dev`).
 
-<!-- -->
-
-	$ export PKG_CONFIG_PATH=/usr/local/lib64/pkgconfig:$PKG_CONFIG_PATH
+The build process will compile and use the latest master branch version of PMDK
+(libpmemobj is part of PMDK). If you want to use a custom installed version of
+PMDK, you can change the `CXXFLAGS` and `LDFLAGS` variables in `common.mk`
+appropriately.
 
 ### How to Run
 
