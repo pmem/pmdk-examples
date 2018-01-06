@@ -119,8 +119,8 @@ handle_op(T &queue, queue_op op, std::function<long long int()> val)
 
 /* The root object definition */
 struct root {
-	nvml::obj::persistent_ptr<nvml::examples::PersistentQueue> pqueue;
-	nvml::examples::VolatileQueue *vqueue;
+	pmem::obj::persistent_ptr<pmem::examples::PersistentQueue> pqueue;
+	pmem::examples::VolatileQueue *vqueue;
 };
 }
 
@@ -138,16 +138,16 @@ main(int argc, char *argv[])
 	auto op = parse_queue_op(argv[3]);
 
 	/* handle file creation/open */
-	nvml::obj::pool<root> pop;
+	pmem::obj::pool<root> pop;
 	if (file_exists(path)) {
-		pop = nvml::obj::pool<root>::open(path, LAYOUT);
+		pop = pmem::obj::pool<root>::open(path, LAYOUT);
 	} else {
-		pop = nvml::obj::pool<root>::create(
+		pop = pmem::obj::pool<root>::create(
 			path, LAYOUT, PMEMOBJ_MIN_POOL * 20, CREATE_MODE_RW);
 
 		/* allocate the persistent queue only when the pool is new */
-		nvml::obj::make_persistent_atomic<
-			nvml::examples::PersistentQueue>(
+		pmem::obj::make_persistent_atomic<
+			pmem::examples::PersistentQueue>(
 			pop, pop.get_root()->pqueue);
 	}
 
@@ -155,7 +155,7 @@ main(int argc, char *argv[])
 	auto proot = pop.get_root();
 
 	/* always allocate the volatile queue */
-	proot->vqueue = new nvml::examples::VolatileQueue();
+	proot->vqueue = new pmem::examples::VolatileQueue();
 
 	/* lambda get value for push operation */
 	auto value = [&argv]() -> long long int { return atoll(argv[4]); };

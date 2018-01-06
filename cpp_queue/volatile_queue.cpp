@@ -35,7 +35,7 @@
 #include <sstream>
 #include <stdexcept>
 
-namespace nvml
+namespace pmem
 {
 namespace examples
 {
@@ -79,4 +79,4 @@ VolatileQueue::show(void) const
 }
 
 } // namespace examples
-} // namespace nvml
+} // namespace pmem
