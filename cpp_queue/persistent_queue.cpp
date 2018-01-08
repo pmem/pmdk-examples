@@ -38,7 +38,7 @@
 #include <sstream>
 #include <exception>
 
-namespace nvml
+namespace pmem
 {
 
 namespace examples
@@ -47,7 +47,7 @@ namespace examples
 void
 PersistentQueue::push(long long int value)
 {
-	auto pool = nvml::obj::pool_by_vptr(this);
+	auto pool = pmem::obj::pool_by_vptr(this);
 	obj::transaction::exec_tx(pool, [this, &value] {
 		auto n = obj::make_persistent<Node>(value, nullptr);
 
@@ -64,7 +64,7 @@ long long int
 PersistentQueue::pop()
 {
 	long long int ret = 0;
-	auto pool = nvml::obj::pool_by_vptr(this);
+	auto pool = pmem::obj::pool_by_vptr(this);
 	obj::transaction::exec_tx(pool, [this, &ret] {
 		if (head == nullptr)
 			throw std::runtime_error("Nothing to pop");
@@ -93,4 +93,4 @@ PersistentQueue::show(void) const
 }
 
 } // namespace examples
-} // namespace nvml
+} // namespace pmem

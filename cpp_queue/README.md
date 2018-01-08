@@ -11,13 +11,13 @@ implementation.
 ### Build Instructions
 
 There is a Makefile provided by the sample. To compile the sample, just type
-`make`; NVML (libpmemobj is part of NVML) needs to be properly installed in
+`make`; PMDK (libpmemobj is part of PMDK) needs to be properly installed in
 your system, as well as a C++ compiler. The default C++ compiler used is `g++`.
 You can change that by setting the `CXX` variable in the Makefile.
 
 If compilation fails because pkg-config cannot find the configuration files
-for NVML, you may need to set the `PKG_CONFIG_PATH` variable before doing make.
-If you installed NVML with the default configuration, these files will probably
+for PMDK, you may need to set the `PKG_CONFIG_PATH` variable before doing make.
+If you installed PMDK with the default configuration, these files will probably
 be either in `/usr/local/lib/pkgconfig` or `/usr/local/lib64/pkgconfig`.
 
 ```bash

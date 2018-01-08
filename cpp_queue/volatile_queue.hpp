@@ -33,7 +33,7 @@
 #include <memory>
 #include <utility>
 
-namespace nvml
+namespace pmem
 {
 namespace examples
 {
@@ -96,4 +96,4 @@ private:
 };
 
 } // namespace examples
-} // namespace nvml
+} // namespace pmem
