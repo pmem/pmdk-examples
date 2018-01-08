@@ -27,8 +27,7 @@
 
 PROGS = cpp_queue
 
-override CXXFLAGS += `pkg-config --cflags libpmemobj++` -I./ -std=c++11
-override LDFLAGS += `pkg-config --libs libpmemobj++` -lpthread
+include ../common.mk
 
 OBJS = main.o persistent_queue.o volatile_queue.o
 HEAD = persistent_queue.hpp volatile_queue.hpp

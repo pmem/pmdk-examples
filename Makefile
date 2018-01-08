@@ -25,9 +25,9 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
-SUBDIRS = mapreduce simple_grep
+SUBDIRS = mapreduce simple_grep cpp_queue
 
-.PHONY: library examples mapreduce simple_grep all clean
+.PHONY: library examples mapreduce simple_grep cpp_queue all clean
 
 all: examples
 
@@ -35,13 +35,17 @@ library:
 	cd pmdk/ && git pull && git submodule init && git submodule update --recursive
 	make -C pmdk/
 
-examples: mapreduce simple_grep 
+#examples: mapreduce simple_grep cpp_queue
+examples: $(SUBDIRS)
 
 mapreduce: library
 	make -C mapreduce
 
 simple_grep: library
 	make -C simple_grep
+
+cpp_queue: library
+	make -C cpp_queue
 
 clean:
 	make -C pmdk clean
