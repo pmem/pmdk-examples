@@ -26,14 +26,14 @@
 
 
 SUBDIRS = mapreduce simple_grep cpp_queue
-
 .PHONY: library examples mapreduce simple_grep cpp_queue all clean
+export PMDK_EXAMPLES_DIR = $(shell pwd)
 
 all: examples
 
 library:	
 	cd pmdk/ && git pull && git submodule init && git submodule update --recursive
-	make -C pmdk/
+	NDCTL_DISABLE=y make -C pmdk/
 
 #examples: mapreduce simple_grep cpp_queue
 examples: $(SUBDIRS)
@@ -48,7 +48,7 @@ cpp_queue: library
 	make -C cpp_queue
 
 clean:
-	make -C pmdk clean
+	NDCTL_DISABLE=y make -C pmdk clean
 	for dir in $(SUBDIRS); do \
 		make -C $$dir clean; \
 	done
