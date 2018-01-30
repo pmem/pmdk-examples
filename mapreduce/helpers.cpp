@@ -38,6 +38,9 @@ get_line (const char *input, size_t input_len, size_t offset, string &line)
 	size_t i = offset; /* we start looking for a line at 'offset' */
 	string line__;
 
+	/* skipping double '\n' or empty lines */
+	while (input[i] == '\n') i++;
+
 	/* look for an end of line */
 	for (; (i < input_len) && (input[i] != '\n'); i++)
 		;
