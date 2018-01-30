@@ -31,8 +31,9 @@ export PMDK_EXAMPLES_DIR = $(shell pwd)
 
 all: examples
 
-library:	
-	cd pmdk/ && git pull && git submodule init && git submodule update --recursive
+library:
+	git submodule init && git submodule update --recursive
+	cd pmdk/ && git pull origin master
 	NDCTL_DISABLE=y make -C pmdk/
 
 #examples: mapreduce simple_grep cpp_queue
