@@ -24,7 +24,8 @@ For more information, please read the READMEs for each sample.
 
 ### Run Instructions
 
-Add the library path to your `LD_LIBRARY_PATH` environment variable:
+If you are not using a custom installed PMDK, add the library path to your 
+`LD_LIBRARY_PATH` environment variable before running any sample code:
 
 	$ export LD_LIBRARY_PATH=$(pwd)/pmdk/src/nondebug:$LD_LIBRARY_PATH
 
