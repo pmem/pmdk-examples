@@ -32,7 +32,7 @@ DIR = $(shell pwd)
 
 # libpmemobj 
 override CXXFLAGS += -I$(PMDK_EXAMPLES_DIR)/pmdk/src/include/ -I./ -std=c++11 -O2
-override LDFLAGS += -L$(PMDK_EXAMPLES_DIR)/pmdk/src/nondebug/ -lpmemobj -lpthread -O2
+override LDFLAGS += -L$(PMDK_EXAMPLES_DIR)/pmdk/src/nondebug/ -lpmem -lpmemobj -lpthread -O2
 # To compile with an installed version of PMDK, use the following instead:
 #override CXXFLAGS += `pkg-config --cflags libpmemobj++` -I./ -std=c++11 -O2
 #override LDFLAGS += `pkg-config --libs libpmemobj++` -lpthread -O2

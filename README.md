@@ -21,3 +21,10 @@ PMDK. If you want to use a custom installed version of PMDK, you can change the
 `CXXFLAGS` and `LDFLAGS` variables in `common.mk` appropriately.
 
 For more information, please read the READMEs for each sample.
+
+### Run Instructions
+
+Add the library path to your `LD_LIBRARY_PATH` environment variable:
+
+	$ export LD_LIBRARY_PATH=$(pwd)/pmdk/src/nondebug:$LD_LIBRARY_PATH
+
