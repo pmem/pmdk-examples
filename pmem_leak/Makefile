@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2017-2018, Intel Corporation
+# Copyright (c) 2018, Intel Corporation
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -25,34 +25,30 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
-SUBDIRS = mapreduce simple_grep cpp_queue pmem_leak
-.PHONY: library examples mapreduce simple_grep cpp_queue pmem_leak all clean
-export PMDK_EXAMPLES_DIR = $(shell pwd)
+PROGS = normal leaker checker fixer
 
-all: examples
+include ../common.mk
 
-library:
-	git submodule init && git submodule update --recursive
-	cd pmdk/ && git pull origin master
-	NDCTL_DISABLE=y make -C pmdk/
+OBJS = normal.o leaker.o checker.o fixer.o
 
-examples: $(SUBDIRS)
+override CXXFLAGS += -I/usr/include/boost/
+override LDFLAGS += -lboost_system -lboost_filesystem
 
-mapreduce: library
-	make -C mapreduce
+all: $(PROGS)
+.PHONY : all
 
-simple_grep: library
-	make -C simple_grep
+%.o : %.cpp common.hpp
+	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-cpp_queue: library
-	make -C cpp_queue
-
-pmem_leak: library
-	make -C pmem_leak
+normal: normal.o
+	$(CXX) $< $(LDFLAGS) -o $@
+leaker: leaker.o
+	$(CXX) $< $(LDFLAGS) -o $@
+checker: checker.o
+	$(CXX) $< $(LDFLAGS) -o $@
+fixer: fixer.o
+	$(CXX) $< $(LDFLAGS) -o $@
 
 clean:
-	NDCTL_DISABLE=y make -C pmdk clean
-	for dir in $(SUBDIRS); do \
-		make -C $$dir clean; \
-	done
+	$(RM) $(OBJS) $(PROGS)
 
