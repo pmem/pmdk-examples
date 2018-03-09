@@ -28,7 +28,7 @@ appropriately.
 
 ### How to Run
 
-There are four programs: `normal`, `leaker`, `checker`, and `fixer`. All the
+There are four programs: `normal`, `leaker`, `checker`, and `fixer`. All
 programs expect one parameter: the file location for the PMEM pool.
 
 
