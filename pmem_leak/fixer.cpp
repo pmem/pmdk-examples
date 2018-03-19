@@ -115,8 +115,10 @@ main (int argc, char *argv[])
 					}
 				}
 				if (found == true) { /* recovering object */
-					emp->next = proot->employees;
-					proot->employees = emp;
+					transaction::exec_tx(pop, [&] {
+						emp->next = proot->employees;
+						proot->employees = emp;
+					});
 					recovered += 1;
 				}
 			}
