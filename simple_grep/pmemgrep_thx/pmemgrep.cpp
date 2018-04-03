@@ -139,7 +139,7 @@ class file
 	int
 	process_pattern (const char *str)
 	{
-		ifstream fd (name.get ());
+		std::ifstream fd (name.get ());
 		string line;
 
 		string patternstr ("(.*)(");
