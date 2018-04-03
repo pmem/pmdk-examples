@@ -44,7 +44,7 @@ using namespace boost::filesystem;
 int
 process_reg_file (const char *pattern, const char *filename)
 {
-	ifstream fd (filename);
+	std::ifstream fd (filename);
 	string line;
 
 	string patternstr ("(.*)(");
