@@ -132,7 +132,7 @@ class file
 			strcpy (new_line.linestr.get (), linestr.c_str ());
 			new_line.linenum = linenum;
 
-			lines.insert (lines.cbegin (), new_line);
+			lines.push_back (new_line);
 		});
 	}
 
