@@ -38,6 +38,7 @@
 #include <iostream>
 #include <stdexcept>
 #include <string>
+#include <functional>
 
 #ifndef _WIN32
 
