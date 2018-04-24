@@ -18,7 +18,8 @@ example, `make mapreduce`.
 
 The build process will compile and use the latest master branch version of
 PMDK. If you want to use a custom installed version of PMDK, you can change the
-`CXXFLAGS` and `LDFLAGS` variables in `common.mk` appropriately.
+`PMDK_EXAMPLES_INCLUDE` and `PMDK_EXAMPLES_LIB_NONDEBUG` variables in
+`common.mk` appropriately.
 
 For more information, please read the READMEs for each sample.
 

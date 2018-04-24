@@ -1,0 +1,17 @@
+diff --git a/Makefile b/Makefile
+index 25a0d52..15d0b47 100644
+--- a/Makefile
++++ b/Makefile
+@@ -25,10 +25,10 @@ JAVADOC = $(JAVA_HOME)/bin/javadoc
+ 
+ JNI_INCLUDES = $(JAVA_HOME)/include $(JAVA_HOME)/include/linux
+ 
+-CFLAGS = -O3 -DNDEBUG -fPIC
++CFLAGS = -I$(PMDK_EXAMPLES_INCLUDE) -O3 -DNDEBUG -fPIC
+ NO_PROC = -proc:none
+ JAVAFLAGS = -Xlint:unchecked -XDenableSunApiLintControl $(NO_PROC)
+-LINK_FLAGS = -fPIC -O3 -DNDEBUG -shared -lpmem -lpmemobj -Wl,-rpath,/usr/local/lib:/usr/local/lib64
++LINK_FLAGS = -fPIC -O3 -DNDEBUG -shared -L$(PMDK_EXAMPLES_LIB_NONDEBUG) -lpmem -lpmemobj -Wl,-rpath,/usr/local/lib:/usr/local/lib64
+ 
+ CPP_SOURCE_DIR = src/main/cpp
+ JAVA_SOURCE_DIR = src/main/java

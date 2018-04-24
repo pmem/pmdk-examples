@@ -35,6 +35,9 @@ library:
 	git submodule init && git submodule update --recursive
 	cd pmdk/ && git pull origin master
 	NDCTL_DISABLE=y make -C pmdk/
+	cd pcj/ && git pull origin master
+	-cd pcj/ && patch -Ni ../pcj.makefile.patch
+	make -C pcj/
 
 examples: $(SUBDIRS)
 

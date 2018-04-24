@@ -28,12 +28,13 @@
 CXX = g++
 RM = rm
 
-DIR = $(shell pwd)
+# To compile with an installed version of PMDK, change the following accordingly:
+export PMDK_EXAMPLES_INCLUDE = $(PMDK_EXAMPLES_DIR)/pmdk/src/include/
+export PMDK_EXAMPLES_LIB_NONDEBUG = $(PMDK_EXAMPLES_DIR)/pmdk/src/nondebug/
+# NOTE: You can figure out the loation of headers and libs by running:
+#`pkg-config --cflags libpmemobj++`
+#`pkg-config --libs libpmemobj++`
 
-# libpmemobj 
-override CXXFLAGS += -I$(PMDK_EXAMPLES_DIR)/pmdk/src/include/ -I./ -std=c++11 -O2
-override LDFLAGS += -L$(PMDK_EXAMPLES_DIR)/pmdk/src/nondebug/ -lpmem -lpmemobj -lpthread -O2
-# To compile with an installed version of PMDK, use the following instead:
-#override CXXFLAGS += `pkg-config --cflags libpmemobj++` -I./ -std=c++11 -O2
-#override LDFLAGS += `pkg-config --libs libpmemobj++` -lpthread -O2
-
+# will compile with libpmemobj
+override CXXFLAGS += -I$(PMDK_EXAMPLES_INCLUDE) -I./ -std=c++11 -O2
+override LDFLAGS += -L$(PMDK_EXAMPLES_LIB_NONDEBUG) -lpmem -lpmemobj -lpthread -O2
