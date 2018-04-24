@@ -24,6 +24,17 @@ the `PMDK_EXAMPLE_INCLUDE` and `PMKD_EXAMPLE_LIB_NONDEBUG` variables in
 
 ### How to Run
 
+In order to pass to the library the location of the pool file and its size, you
+need to modify the configuration file `config.properties` (which needs to
+reside on the current working directory). A sample is provided, which creates
+the pool on the path `/mnt/mem/persistent_heap` with size 2GiB. Please, edit
+the file to adapt it to your system:
+
+	$ cat config.properties
+	path=/mnt/mem/persistent_heap
+	size=2147483648
+	$
+
 To run do:
 
 	$ make run
