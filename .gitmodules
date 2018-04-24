@@ -1,3 +1,6 @@
 [submodule "pmdk"]
 	path = pmdk
 	url = https://github.com/pmem/pmdk.git
+[submodule "pcj"]
+	path = pcj
+	url = https://github.com/pmem/pcj
