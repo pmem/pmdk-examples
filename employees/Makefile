@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2017-2018, Intel Corporation
+# Copyright (c) 2018, Intel Corporation
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -9,7 +9,7 @@
 #     * Redistributions in binary form must reproduce the above copyright
 #       notice, this list of conditions and the following disclaimer in the
 #       documentation and/or other materials provided with the distribution.
-#     * Neither the name of Intel Corporation nor the names of its contributors
+#     *  either the name of Intel Corporation nor the names of its contributors
 #       may be used to endorse or promote products derived from this software
 #       without specific prior written permission.
 #
@@ -25,40 +25,13 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
-SUBDIRS = mapreduce simple_grep cpp_queue pmem_leak employees
-.PHONY: library examples mapreduce simple_grep cpp_queue pmem_leak employees all clean
-export PMDK_EXAMPLES_DIR = $(shell pwd)
+EmployeeList:
+	javac -cp .:$(PMDK_EXAMPLES_DIR)/pcj/target/classes Employee.java
+	javac -cp .:$(PMDK_EXAMPLES_DIR)/pcj/target/classes EmployeeList.java
 
-all: examples
-
-library:
-	git submodule init && git submodule update --recursive
-	cd pmdk/ && git pull origin master
-	NDCTL_DISABLE=y make -C pmdk/
-	cd pcj/ && git pull origin master
-	-cd pcj/ && patch -Ni ../pcj.makefile.patch
-	make -C pcj/
-
-examples: $(SUBDIRS)
-
-mapreduce: library
-	make -C mapreduce
-
-simple_grep: library
-	make -C simple_grep
-
-cpp_queue: library
-	make -C cpp_queue
-
-pmem_leak: library
-	make -C pmem_leak
-
-employees: library
-	make -C employees
+run:
+	java -cp .:$(PMDK_EXAMPLES_DIR)/pcj/target/classes -Djava.library.path=$(PMDK_EXAMPLES_DIR)/pcj/target/cppbuild EmployeeList
 
 clean:
-	NDCTL_DISABLE=y make -C pmdk clean
-	for dir in $(SUBDIRS); do \
-		make -C $$dir clean; \
-	done
+	rm *.class
 

@@ -11,6 +11,7 @@ For compilation, a Makefile is provided.  To build all samples just type
 
  - A C++ compiler. The default C++ compiler used is `g++`. You can change that
    by setting the `CXX` variable in `common.mk`.
+ - A Java compiler. `$JAVA_HOME` needs to be propertly set.
  - The Boost C++ Library Collection (http://boost.org).
 
 Alternatively, you can build single samples by typing `make <sample_name>`. For
