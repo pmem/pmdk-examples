@@ -1,7 +1,7 @@
 ### Introduction
 
-The goal of this repository is to present clear programming examples of
-how to use the C++ bindings of libpmemobj, which is a core library of the
+The goal of this repository is to present clear programming examples of how to
+use the C++ and Java bindings of libpmemobj, which is a core library of the
 Persistent Memory Development Kit (PMDK).
 
 ### Build Instructions
