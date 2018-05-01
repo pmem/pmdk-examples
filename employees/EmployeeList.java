@@ -52,8 +52,6 @@ public class EmployeeList {
 
 		} else {
 
-			employees = ObjectDirectory.get("employees", PersistentArray.class);
-
 			System.out.println("Reading object back (if no output, means objects are OK)");
 
 			// reading objects
