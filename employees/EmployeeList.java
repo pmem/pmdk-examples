@@ -35,7 +35,7 @@ public class EmployeeList {
 	public static void main(String[] args) {
 
 		// fetching back main employee list (or creating it if it is not there)
-		if (ObjectDirectory.get("employees", PersistentArray.class) == null) {
+		if ((employees = ObjectDirectory.get("employees", PersistentArray.class)) == null) {
 
 			employees = new PersistentArray<Employee>(64);
 			ObjectDirectory.put("employees", employees);
@@ -52,13 +52,17 @@ public class EmployeeList {
 
 		} else {
 
-			System.out.println("Reading object back (if no output, means objects are OK)");
+			System.out.println("Reading object back");
 
 			// reading objects
-			for (int i = 0; i < 64; i++) {
-				assert(employees.get(i).getId() == i);
-			}
-
+			for (int i = 0; i < 64; i++)
+				if ((employees.get(i).getId() == i) == true)
+					System.out.print("OK ");
+				else {
+					System.out.print("FAIL ");
+					break;
+				}
+			System.out.print("\n");
 		}
 	}
 }
