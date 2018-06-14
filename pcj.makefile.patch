@@ -1,8 +1,17 @@
 diff --git a/Makefile b/Makefile
-index 25a0d52..15d0b47 100644
+index 25a0d52..afafa29 100644
 --- a/Makefile
 +++ b/Makefile
-@@ -25,10 +25,10 @@ JAVADOC = $(JAVA_HOME)/bin/javadoc
+@@ -18,6 +18,8 @@
+ # Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ # Boston, MA  02110-1301, USA.
+ 
++include ../common.mk
++
+ CC = g++
+ JAVAC = javac 
+ JAVA = java 
+@@ -25,10 +27,10 @@ JAVADOC = $(JAVA_HOME)/bin/javadoc
  
  JNI_INCLUDES = $(JAVA_HOME)/include $(JAVA_HOME)/include/linux
  
