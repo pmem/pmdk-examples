@@ -34,7 +34,7 @@ all: examples
 library:
 	git submodule init && git submodule update --recursive
 	cd pmdk/ && git pull origin master
-	NDCTL_DISABLE=y make -C pmdk/
+	NDCTL_ENABLE=n make -C pmdk/
 	cd pcj/ && git pull origin master
 	-cd pcj/ && patch -Ni ../pcj.makefile.patch
 	make -C pcj/
@@ -57,7 +57,7 @@ employees: library
 	make -C employees
 
 clean:
-	NDCTL_DISABLE=y make -C pmdk clean
+	NDCTL_ENABLE=n make -C pmdk clean
 	for dir in $(SUBDIRS); do \
 		make -C $$dir clean; \
 	done
