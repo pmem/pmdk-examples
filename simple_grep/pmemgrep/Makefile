@@ -25,6 +25,7 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
+export PMDK_EXAMPLES_DIR = $(shell pwd)/../..
 include ../../common.mk
 
 PROGS = pmemgrep

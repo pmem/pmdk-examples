@@ -25,10 +25,11 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
-PROGS = normal leaker checker fixer
-
+export PMDK_EXAMPLES_DIR = $(shell pwd)/..
 include ../common.mk
 
+
+PROGS = normal leaker checker fixer
 OBJS = normal.o leaker.o checker.o fixer.o
 
 override CXXFLAGS += -I/usr/include/boost/

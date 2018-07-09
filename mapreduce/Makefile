@@ -25,10 +25,11 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
-PROGS = wordcount
-
+export PMDK_EXAMPLES_DIR = $(shell pwd)/..
 include ../common.mk
 
+
+PROGS = wordcount
 OBJS = main.o helpers.o persistent_string.o list_entry.o task_list.o pm_mapreduce.o
 HEAD = pm_mapreduce.hpp task_list.hpp list_entry.hpp helpers.hpp persistent_string.hpp
 

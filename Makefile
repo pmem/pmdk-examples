@@ -25,11 +25,12 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
-SUBDIRS = mapreduce simple_grep cpp_queue pmem_leak employees
-.PHONY: library examples mapreduce simple_grep cpp_queue pmem_leak employees all clean
 export PMDK_EXAMPLES_DIR = $(shell pwd)
 
-all: examples
+SUBDIRS = mapreduce simple_grep cpp_queue pmem_leak employees
+.PHONY: library examples mapreduce simple_grep cpp_queue pmem_leak employees all clean
+
+all: library examples
 
 library:
 	git submodule init && git submodule update --recursive
@@ -41,19 +42,19 @@ library:
 
 examples: $(SUBDIRS)
 
-mapreduce: library
+mapreduce:
 	make -C mapreduce
 
-simple_grep: library
+simple_grep:
 	make -C simple_grep
 
-cpp_queue: library
+cpp_queue:
 	make -C cpp_queue
 
-pmem_leak: library
+pmem_leak:
 	make -C pmem_leak
 
-employees: library
+employees:
 	make -C employees
 
 clean:

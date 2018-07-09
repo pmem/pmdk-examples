@@ -25,10 +25,11 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
-PROGS = cpp_queue
-
+export PMDK_EXAMPLES_DIR = $(shell pwd)/..
 include ../common.mk
 
+
+PROGS = cpp_queue
 OBJS = main.o persistent_queue.o volatile_queue.o
 HEAD = persistent_queue.hpp volatile_queue.hpp
 
