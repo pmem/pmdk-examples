@@ -15,12 +15,13 @@ aware synchronization. This version is located under `pmemgrep_thx/`.
 To build this sample, download/clone the [pmdk-examples
 repository](https://github.com/pmem/pmdk-examples).  A Makefile is provided. To
 compile this sample, just type `make simple_grep` from the root directory of
-the repository; a C++ compiler and the C++ Boost Library (http://boost.org. In
-ubuntu 16.04 you can install the package `libboost-all-dev`) needs to be
-properly installed in your system. The default C++ compiler used is `g++`. You
-can change that by setting the `CXX` variable in `common.mk`. Alternatively,
-you can build all samples by typing `make`. Please, read the README at the root
-directory of the repository for more information.
+the repository, or `make` from this location; a C++ compiler and the [C++ Boost
+Library](http://boost.org) (in ubuntu 16.04 you can install the package
+`libboost-all-dev`) needs to be properly installed in your system. The default
+C++ compiler used is `g++`. You can change that by setting the `CXX` variable
+in `common.mk`. Alternatively, you can build all samples by typing `make`.
+Please, read the README at the root directory of the repository for more
+information.
 
 The build process will compile and use the latest master branch version of PMDK
 (libpmemobj is part of PMDK). If you want to use a custom installed version of
