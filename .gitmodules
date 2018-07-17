@@ -4,3 +4,6 @@
 [submodule "pcj"]
 	path = pcj
 	url = https://github.com/pmem/pcj.git
+[submodule "libpmemobj-cpp"]
+	path = libpmemobj-cpp
+	url = https://github.com/pmem/libpmemobj-cpp.git

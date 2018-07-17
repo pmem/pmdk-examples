@@ -39,6 +39,7 @@ library:
 	cd pcj/ && git pull origin master
 	-cd pcj/ && patch -Ni ../pcj.makefile.patch
 	make -C pcj/
+	cd libpmemobj-cpp && git pull origin master
 
 examples: $(SUBDIRS)
 
