@@ -28,20 +28,15 @@
 export PMDK_EXAMPLES_DIR = $(shell pwd)
 
 SUBDIRS = mapreduce simple_grep cpp_queue pmem_leak employees
-.PHONY: library examples mapreduce simple_grep cpp_queue pmem_leak employees all clean
+.PHONY: libraries examples mapreduce simple_grep cpp_queue pmem_leak employees all clean
 
-all: library examples
-
-library:
-	git submodule init && git submodule update --recursive
-	cd pmdk/ && git pull origin master
-	NDCTL_ENABLE=n make -C pmdk/
-	cd pcj/ && git pull origin master
-	-cd pcj/ && patch -Ni ../pcj.makefile.patch
-	make -C pcj/
-	cd libpmemobj-cpp && git pull origin master
+all: libraries
+	make examples
 
 examples: $(SUBDIRS)
+
+libraries:
+	make -C lib
 
 mapreduce:
 	make -C mapreduce
@@ -59,8 +54,7 @@ employees:
 	make -C employees
 
 clean:
-	NDCTL_ENABLE=n make -C pmdk clean
 	for dir in $(SUBDIRS); do \
 		make -C $$dir clean; \
 	done
-
+	make -C lib clean

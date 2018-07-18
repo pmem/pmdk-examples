@@ -1,9 +1,9 @@
 [submodule "pmdk"]
-	path = pmdk
+	path = lib/pmdk
 	url = https://github.com/pmem/pmdk.git
 [submodule "pcj"]
-	path = pcj
+	path = lib/pcj
 	url = https://github.com/pmem/pcj.git
 [submodule "libpmemobj-cpp"]
-	path = libpmemobj-cpp
+	path = lib/libpmemobj-cpp
 	url = https://github.com/pmem/libpmemobj-cpp.git

@@ -24,21 +24,19 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+export PMDK_EXAMPLES_DIR = $(shell pwd)/..
 
-CXX = g++
-RM = rm
+.PHONY: all clean
 
-# To compile with an installed version of PMDK, change the following accordingly:
-export PMDK_EXAMPLES_INCLUDE      = $(PMDK_EXAMPLES_DIR)/lib/pmdk/src/include/
-export PMDK_EXAMPLES_CPP_INCLUDE  = $(PMDK_EXAMPLES_DIR)/lib/libpmemobj-cpp/include/
-export PMDK_EXAMPLES_LIB_NONDEBUG = $(PMDK_EXAMPLES_DIR)/lib/pmdk/src/nondebug/
-# NOTE: You can figure out the loation of headers and libs by running:
-#`pkg-config --cflags libpmemobj++`
-#`pkg-config --libs libpmemobj++`
+all:
+	cd .. && git submodule init && git submodule update --recursive
+	cd pmdk/ && git pull origin master
+	NDCTL_ENABLE=n make -C pmdk/
+	cd pcj/ && git pull origin master
+	-cd pcj/ && patch -Ni ../pcj.makefile.patch
+	make -C pcj/
+	cd libpmemobj-cpp && git pull origin master
 
-# will compile with libpmemobj
-override CXXFLAGS += -I$(PMDK_EXAMPLES_INCLUDE) -I$(PMDK_EXAMPLES_CPP_INCLUDE) -I./ -std=c++11 -O2
-override LDFLAGS += -L$(PMDK_EXAMPLES_LIB_NONDEBUG) -lpmem -lpmemobj -lpthread -O2
-
-# This are used to compile Java src with PCJ
-export PMDK_EXAMPLES_PCJ_HOME = $(PMDK_EXAMPLES_DIR)/lib/pcj/
+clean:
+	NDCTL_ENABLE=n make -C pmdk/ clean
+	make -C pcj/ clean

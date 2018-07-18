@@ -33,11 +33,11 @@ Or go to the directory of that particular sample and running make:
 	$ cd mapreduce
 	$ make
 
-In order for this to work, you need to have the PMDK libraries built first.
+In order for this to work, you need to have the needed libraries built first.
 If you are using the PMDK provided with these examples, you can build them
 by running:
 
-	$ make library
+	$ make libraries
 
 For more information, please read the READMEs for each sample.
 

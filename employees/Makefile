@@ -25,13 +25,14 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 export PMDK_EXAMPLES_DIR = $(shell pwd)/..
+include ../common.mk
 
 EmployeeList:
-	javac -cp .:$(PMDK_EXAMPLES_DIR)/pcj/target/classes Employee.java
-	javac -cp .:$(PMDK_EXAMPLES_DIR)/pcj/target/classes EmployeeList.java
+	javac -cp .:$(PMDK_EXAMPLES_PCJ_HOME)/target/classes Employee.java
+	javac -cp .:$(PMDK_EXAMPLES_PCJ_HOME)/target/classes EmployeeList.java
 
 run:
-	java -cp .:../pcj/target/classes -Djava.library.path=../pcj/target/cppbuild EmployeeList
+	java -cp .:$(PMDK_EXAMPLES_PCJ_HOME)target/classes -Djava.library.path=$(PMDK_EXAMPLES_PCJ_HOME)/target/cppbuild EmployeeList
 
 clean:
 	rm *.class

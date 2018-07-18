@@ -6,7 +6,7 @@ index 25a0d52..afafa29 100644
  # Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
  # Boston, MA  02110-1301, USA.
  
-+include ../common.mk
++include ../../common.mk
 +
  CC = g++
  JAVAC = javac 
