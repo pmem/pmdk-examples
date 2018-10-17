@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2017, Intel Corporation
+# Copyright (c) 2018, Intel Corporation
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -30,11 +30,6 @@ include ../../common.mk
 
 PROGS = pmemgrep
 OBJS = pmemgrep.o
-
-# boost
-override CXXFLAGS += -I/usr/include/boost/
-override LDFLAGS += -lboost_system -lboost_filesystem
-#
 
 %.o : %.cpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@

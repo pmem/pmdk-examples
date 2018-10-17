@@ -13,7 +13,6 @@ and PCJ, just type `make`. The following are the needed dependencies:
    by setting the `CXX` variable in `common.mk`.
  - Java 8 or above (including a Java compiler). The `$JAVA_HOME` environmental
    variable needs to be propertly set.
- - The [Boost C++ Library Collection](http://boost.org), used by some samples.
  - To build PMDK you may need to install other dependencies in your system.
    Please, read the instructions in the 
    [PMDK repository](https://github.com/pmem/pmdk).

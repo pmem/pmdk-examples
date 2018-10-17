@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2017, Intel Corporation
+Copyright (c) 2018, Intel Corporation
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:
@@ -26,8 +26,10 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
 
-#include <boost/filesystem.hpp>
-#include <boost/foreach.hpp>
+#include <sys/stat.h>
+#include <dirent.h>
+#include <errno.h>
+#include <unistd.h>
 #include <fstream>
 #include <iostream>
 #include <libpmemobj++/allocator.hpp>
@@ -43,7 +45,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #define POOLSIZE ((size_t) (1024 * 1024 * 256)) /* 256 MB */
 
 using namespace std;
-using namespace boost::filesystem;
 using namespace pmem;
 using namespace pmem::obj;
 
@@ -356,24 +357,35 @@ int
 process_directory_recursive (const char *dirname,
                              vector<tuple<string, time_t>> &files)
 {
-	path dir_path (dirname);
-	directory_iterator it (dir_path), eod;
+	DIR *dp;
+	struct dirent *dirp;
+	struct stat st;
+	char *entryname;
 
-	BOOST_FOREACH (path const &pa, make_pair (it, eod)) {
-
-		/* full path name */
-		string fpname = pa.string ();
-
-		if (is_regular_file (pa)) {
-			files.push_back (
-			tuple<string, time_t> (fpname, last_write_time (pa)));
-		} else if (is_directory (pa) && pa.filename () != "."
-		           && pa.filename () != "..") {
-			if (process_directory_recursive (fpname.c_str (), files)
-			    < 0)
-				return -1;
-		}
+	if ((dp = opendir(dirname)) == NULL) {
+		cout << "Error number = " << errno << " opening " << dirname << endl;
+		return -1;
 	}
+        while ((dirp = readdir(dp)) != NULL) {
+                entryname = (char *) malloc (strlen(dirname)+strlen(dirp->d_name)+2);
+                if (entryname==NULL)
+                        return -1;
+                sprintf (entryname, "%s/%s", dirname, dirp->d_name);
+
+                stat (entryname, &st);
+                if (st.st_mode & S_IFREG)
+                        files.push_back (
+			tuple<string, time_t> (string(entryname), st.st_mtime));
+                else if (st.st_mode & S_IFDIR) {
+                        if (strcmp(".",dirp->d_name)!=0 &&
+                            strcmp("..",dirp->d_name)!=0) {
+                                if (process_directory_recursive (entryname, files)
+                                < 0)
+                                        return -1;
+                        }
+                }
+                free (entryname);
+        }
 	return 0;
 }
 
@@ -394,20 +406,19 @@ process_directory (pattern *p, const char *dirname)
 int
 process_input (struct pattern *p, const char *input)
 {
-	/* check input type */
-	path pa (input);
+	struct stat st;
 
-	if (is_regular_file (pa))
-		return process_reg_file (p, input, last_write_time (pa));
-	else if (is_directory (pa))
-		return process_directory (p, input);
-	else {
+	if (stat (input, &st) == 0) {
+		if (st.st_mode & S_IFREG)
+			return process_reg_file (p, input, st.st_mtime);
+		else if (st.st_mode & S_IFDIR)
+			return process_directory (p, input);
+	} else {
 		cout << string (input);
 		cout << " is not a valid input" << endl;
 	}
 	return -1;
 }
-
 
 /*
  * MAIN
@@ -425,7 +436,7 @@ main (int argc, char *argv[])
 	}
 
 	/* Opening pmem-file */
-	if (!exists (argv[1])) /* new file */
+	if (access (argv[1], F_OK)) /* new file */
 		pop = pool<root>::create (argv[1], "PMEMGREP", POOLSIZE, S_IRWXU);
 	else /* file exists */
 		pop = pool<root>::open (argv[1], "PMEMGREP");

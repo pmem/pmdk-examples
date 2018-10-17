@@ -32,7 +32,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 using namespace std;
 using namespace pmem;
 using namespace pmem::obj;
-namespace fs = boost::filesystem;
 
 /* globals */
 pool<root> pop;
@@ -50,7 +49,7 @@ main (int argc, char *argv[])
 	}
 
 	/* opening pmem-file */
-	if (!fs::exists (argv[1])) {
+	if (access (argv[1], F_OK)) {
 		cout << "pmem-file '" << string (argv[1]) << "' does not "
 		                                             "exist." << endl;
 		return 1;

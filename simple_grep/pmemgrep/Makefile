@@ -31,11 +31,6 @@ include ../../common.mk
 PROGS = pmemgrep
 OBJS = pmemgrep.o
 
-# boost
-override CXXFLAGS += -I/usr/include/boost/
-override LDFLAGS += -lboost_system -lboost_filesystem
-#
-
 %.o : %.cpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 

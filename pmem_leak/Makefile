@@ -28,12 +28,8 @@
 export PMDK_EXAMPLES_DIR = $(shell pwd)/..
 include ../common.mk
 
-
 PROGS = normal leaker checker fixer
 OBJS = normal.o leaker.o checker.o fixer.o
-
-override CXXFLAGS += -I/usr/include/boost/
-override LDFLAGS += -lboost_system -lboost_filesystem
 
 all: $(PROGS)
 .PHONY : all

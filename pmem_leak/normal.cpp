@@ -31,7 +31,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 using namespace std;
 using namespace pmem;
 using namespace pmem::obj;
-namespace fs = boost::filesystem;
 
 /* globals */
 pool<root> pop;
@@ -49,7 +48,7 @@ main (int argc, char *argv[])
 	}
 
 	/* creating pmem-file */
-	if (fs::exists (argv[1])) { /* file exists, deleting it... */
+	if (!access (argv[1], F_OK)) { /* file exists, deleting it... */
 		cout << "pmem-file '" << string (argv[1]) << "' exists. ";
 		cout << "Do you want to overwrite it? (Y/n) ";
 
@@ -59,7 +58,7 @@ main (int argc, char *argv[])
 			cout << "bye bye" << endl << flush;
 			return 0;
 		}
-		fs::remove (argv[1]);
+		remove (argv[1]);
 	}
 	pop = pool<root>::create (argv[1], "PMEMLEAK", POOLSIZE, S_IRWXU);
 	auto proot = pop.get_root ();
