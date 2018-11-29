@@ -27,7 +27,7 @@
 
 export PMDK_EXAMPLES_DIR = $(shell pwd)
 
-SUBDIRS = mapreduce simple_grep cpp_queue pmem_leak employees p_pool
+SUBDIRS = mapreduce simple_grep cpp_queue pmem_leak employees p_pool hello_world
 .PHONY: libraries examples mapreduce simple_grep cpp_queue pmem_leak employees p_pool all clean
 
 all: libraries
@@ -55,6 +55,9 @@ employees:
 
 p_pool:
 	make -C p_pool
+
+hello_world:
+	make -C hello_world
 
 clean:
 	for dir in $(SUBDIRS); do \
