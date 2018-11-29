@@ -24,7 +24,7 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-
+CC  = gcc
 CXX = g++
 RM = rm
 
@@ -37,6 +37,7 @@ export PMDK_EXAMPLES_LIB_NONDEBUG = $(PMDK_EXAMPLES_DIR)/lib/pmdk/src/nondebug/
 #`pkg-config --libs libpmemobj++`
 
 # will compile with libpmemobj
+override CFLAGS += -I$(PMDK_EXAMPLES_INCLUDE) -I./ -O2
 override CXXFLAGS += -I$(PMDK_EXAMPLES_INCLUDE) -I$(PMDK_EXAMPLES_CPP_INCLUDE) -I./ -std=c++11 -O2
 override LDFLAGS += -L$(PMDK_EXAMPLES_LIB_NONDEBUG) -lpmem -lpmemobj -lpthread -O2
 
