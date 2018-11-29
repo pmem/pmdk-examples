@@ -39,7 +39,7 @@ export PMDK_EXAMPLES_LIB_NONDEBUG = $(PMDK_EXAMPLES_DIR)/lib/pmdk/src/nondebug/
 # will compile with libpmemobj
 override CFLAGS += -I$(PMDK_EXAMPLES_INCLUDE) -I./ -O2
 override CXXFLAGS += -I$(PMDK_EXAMPLES_INCLUDE) -I$(PMDK_EXAMPLES_CPP_INCLUDE) -I./ -std=c++11 -O2
-override LDFLAGS += -L$(PMDK_EXAMPLES_LIB_NONDEBUG) -lpmem -lpmemobj -lpthread -O2
+override LDFLAGS += -L$(PMDK_EXAMPLES_LIB_NONDEBUG) -lpmem -lpmemblk -lpmemobj -lpthread -O2
 
 # This are used to compile Java src with PCJ
 export PMDK_EXAMPLES_PCJ_HOME = $(PMDK_EXAMPLES_DIR)/lib/pcj/
