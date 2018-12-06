@@ -7,3 +7,6 @@
 [submodule "libpmemobj-cpp"]
 	path = lib/libpmemobj-cpp
 	url = https://github.com/pmem/libpmemobj-cpp.git
+[submodule "lib/llpl"]
+	path = lib/llpl
+	url = https://github.com/pmem/llpl.git

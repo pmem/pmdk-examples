@@ -32,7 +32,7 @@ EmployeeList:
 	javac -cp .:$(PMDK_EXAMPLES_PCJ_HOME)/target/classes EmployeeList.java
 
 run:
-	java -cp .:$(PMDK_EXAMPLES_PCJ_HOME)target/classes -Djava.library.path=$(PMDK_EXAMPLES_PCJ_HOME)/target/cppbuild EmployeeList
+	java -cp .:$(PMDK_EXAMPLES_PCJ_HOME)/target/classes -Djava.library.path=$(PMDK_EXAMPLES_PCJ_HOME)/target/cppbuild EmployeeList
 
 clean:
 	rm *.class
