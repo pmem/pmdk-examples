@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2017-2018, Intel Corporation
+# Copyright (c) 2018, Intel Corporation
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -24,23 +24,17 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-CC  = gcc
-CXX = g++
-RM = rm
 
-# To compile with an installed version of PMDK, change the following accordingly:
-export PMDK_EXAMPLES_INCLUDE      = $(PMDK_EXAMPLES_DIR)/lib/pmdk/src/include/
-export PMDK_EXAMPLES_CPP_INCLUDE  = $(PMDK_EXAMPLES_DIR)/lib/libpmemobj-cpp/include/
-export PMDK_EXAMPLES_LIB_NONDEBUG = $(PMDK_EXAMPLES_DIR)/lib/pmdk/src/nondebug/
-# NOTE: You can figure out the loation of headers and libs by running:
-#`pkg-config --cflags libpmemobj++`
-#`pkg-config --libs libpmemobj++`
+SUBDIRS = libpmem libpmemblk libpmemobj libpmemobj++ llpl pcj
 
-# will compile with libpmemobj
-override CFLAGS += -I$(PMDK_EXAMPLES_INCLUDE) -I./ -O2
-override CXXFLAGS += -I$(PMDK_EXAMPLES_INCLUDE) -I$(PMDK_EXAMPLES_CPP_INCLUDE) -I./ -std=c++11 -O2
-override LDFLAGS += -L$(PMDK_EXAMPLES_LIB_NONDEBUG) -lpmem -lpmemblk -lpmemobj -lpthread -O2
+all:
+	for dir in $(SUBDIRS); do \
+		make -C $$dir; \
+	done
 
-# This are used to compile Java src with PCJ
-export PMDK_EXAMPLES_PCJ_HOME = $(PMDK_EXAMPLES_DIR)/lib/pcj/
-export PMDK_EXAMPLES_LLPL_HOME = $(PMDK_EXAMPLES_DIR)/lib/llpl/
+clean:
+	for dir in $(SUBDIRS); do \
+		make -C $$dir clean; \
+	done
+	
+
