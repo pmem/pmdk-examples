@@ -29,13 +29,13 @@ export PMDK_EXAMPLES_DIR = $(shell pwd)/..
 .PHONY: all clean
 
 all:
-	cd .. && git submodule init && git submodule update --recursive
-	cd pmdk/ && git pull origin master
-	NDCTL_ENABLE=n make -C pmdk/
-	cd pcj/ && git pull origin master
-	-cd pcj/ && patch -Ni ../pcj.makefile.patch
+	#cd .. && git submodule init && git submodule update --recursive
+	#cd pmdk/ && git pull origin master
+	#NDCTL_ENABLE=n make -C pmdk/
+	#cd pcj/ && git pull origin master
+	#-cd pcj/ && patch -Ni ../pcj.makefile.patch
 	make -C pcj/
-	cd libpmemobj-cpp && git pull origin master
+	#cd libpmemobj-cpp && git pull origin master
 
 clean:
 	NDCTL_ENABLE=n make -C pmdk/ clean
