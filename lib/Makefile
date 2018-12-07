@@ -38,6 +38,7 @@ all:
 	cd libpmemobj-cpp && git pull origin master
 	cd llpl/ && git pull origin master
 	-cd llpl/ && patch -Ni ../llpl.makefile.patch
+	make -C llpl/
 
 clean:
 	NDCTL_ENABLE=n make -C pmdk/ clean
