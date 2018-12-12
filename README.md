@@ -18,9 +18,13 @@ and PCJ, just type `make`. The following are the needed dependencies:
    [PMDK repository](https://github.com/pmem/pmdk).
 
 The build process will compile and use the latest master branch version of
-PMDK and PCJ. If you want to use a custom installed version of PMDK, you can 
-change the `PMDK_EXAMPLES_INCLUDE` and `PMDK_EXAMPLES_LIB_NONDEBUG` variables 
-in `common.mk` appropriately.
+PMDK, PCJ and LLPL. If you want to use a custom installed version of PMDK, you
+can change the `PMDK_EXAMPLES_INCLUDE` and `PMDK_EXAMPLES_LIB_NONDEBUG`
+variables in `common.mk` appropriately.
+
+Build everything doing:
+
+	$ make
 
 Alternatively, you can build single samples by typing `make <sample_name>`. For
 example: 
@@ -32,7 +36,7 @@ Or go to the directory of that particular sample and running make:
 	$ cd mapreduce
 	$ make
 
-In order for this to work, you need to have the needed libraries built first.
+In order for that to work, you need to have the needed libraries built first.
 If you are using the PMDK provided with these examples, you can build them
 by running:
 
