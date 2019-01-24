@@ -1,4 +1,4 @@
-AC_INIT([grep], [0.1])
+AC_INIT([pmemgrep], [0.1])
 AM_INIT_AUTOMAKE
 AC_PROG_CXX
 PKG_CHECK_MODULES([PMEM], [libpmem >= 1.5])
