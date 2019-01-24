@@ -1,0 +1,1 @@
+cd /home/tcs/server && '/usr/bin/cpack' -G TGZ --config CPackConfig.cmake

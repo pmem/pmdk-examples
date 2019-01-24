@@ -1,0 +1,7 @@
+/home/tcs/server/storage/tokudb/PerconaFT/snappy/src/build_snappy-build/CMakeFiles/install/strip.dir
+/home/tcs/server/storage/tokudb/PerconaFT/snappy/src/build_snappy-build/CMakeFiles/edit_cache.dir
+/home/tcs/server/storage/tokudb/PerconaFT/snappy/src/build_snappy-build/CMakeFiles/snappy.dir
+/home/tcs/server/storage/tokudb/PerconaFT/snappy/src/build_snappy-build/CMakeFiles/install.dir
+/home/tcs/server/storage/tokudb/PerconaFT/snappy/src/build_snappy-build/CMakeFiles/rebuild_cache.dir
+/home/tcs/server/storage/tokudb/PerconaFT/snappy/src/build_snappy-build/CMakeFiles/list_install_components.dir
+/home/tcs/server/storage/tokudb/PerconaFT/snappy/src/build_snappy-build/CMakeFiles/install/local.dir

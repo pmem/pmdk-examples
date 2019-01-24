@@ -1,0 +1,2 @@
+/usr/bin/ar qc librocksdb_aux_lib.a  CMakeFiles/rocksdb_aux_lib.dir/rdb_cf_options.cc.o CMakeFiles/rocksdb_aux_lib.dir/event_listener.cc.o CMakeFiles/rocksdb_aux_lib.dir/rdb_perf_context.cc.o
+/usr/bin/ranlib librocksdb_aux_lib.a

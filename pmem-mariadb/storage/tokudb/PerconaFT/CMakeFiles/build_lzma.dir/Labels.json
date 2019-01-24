@@ -1,0 +1,46 @@
+{
+	"sources" : 
+	[
+		{
+			"file" : "/home/tcs/server/storage/tokudb/PerconaFT/CMakeFiles/build_lzma"
+		},
+		{
+			"file" : "/home/tcs/server/storage/tokudb/PerconaFT/CMakeFiles/build_lzma.rule"
+		},
+		{
+			"file" : "/home/tcs/server/storage/tokudb/PerconaFT/CMakeFiles/build_lzma-complete.rule"
+		},
+		{
+			"file" : "/home/tcs/server/storage/tokudb/PerconaFT/xz/src/build_lzma-stamp/build_lzma-install.rule"
+		},
+		{
+			"file" : "/home/tcs/server/storage/tokudb/PerconaFT/xz/src/build_lzma-stamp/build_lzma-mkdir.rule"
+		},
+		{
+			"file" : "/home/tcs/server/storage/tokudb/PerconaFT/xz/src/build_lzma-stamp/build_lzma-download.rule"
+		},
+		{
+			"file" : "/home/tcs/server/storage/tokudb/PerconaFT/xz/src/build_lzma-stamp/build_lzma-update.rule"
+		},
+		{
+			"file" : "/home/tcs/server/storage/tokudb/PerconaFT/xz/src/build_lzma-stamp/build_lzma-patch.rule"
+		},
+		{
+			"file" : "/home/tcs/server/storage/tokudb/PerconaFT/xz/src/build_lzma-stamp/build_lzma-configure.rule"
+		},
+		{
+			"file" : "/home/tcs/server/storage/tokudb/PerconaFT/xz/src/build_lzma-stamp/build_lzma-build.rule"
+		},
+		{
+			"file" : "/home/tcs/server/storage/tokudb/PerconaFT/xz/src/build_lzma-stamp/build_lzma-reclone_src.rule"
+		}
+	],
+	"target" : 
+	{
+		"labels" : 
+		[
+			"build_lzma"
+		],
+		"name" : "build_lzma"
+	}
+}

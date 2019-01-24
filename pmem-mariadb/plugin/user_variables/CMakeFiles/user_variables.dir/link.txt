@@ -1,0 +1,2 @@
+/usr/bin/ar qc libuser_variables.a  CMakeFiles/user_variables.dir/user_variables.cc.o
+/usr/bin/ranlib libuser_variables.a

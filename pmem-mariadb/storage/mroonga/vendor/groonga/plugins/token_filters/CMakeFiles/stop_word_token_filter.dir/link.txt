@@ -1,0 +1,2 @@
+/usr/bin/ar qc libstop_word_token_filter.a  CMakeFiles/stop_word_token_filter.dir/stop_word.c.o
+/usr/bin/ranlib libstop_word_token_filter.a

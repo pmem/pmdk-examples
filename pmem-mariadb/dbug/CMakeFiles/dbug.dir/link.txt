@@ -1,0 +1,2 @@
+/usr/bin/ar qc libdbug.a  CMakeFiles/dbug.dir/dbug.c.o
+/usr/bin/ranlib libdbug.a

@@ -1,0 +1,16 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/tcs/server/storage/rocksdb/rocksdb/tools/sst_dump.cc
+rocksdb/sst_dump_tool.h
+/home/tcs/server/storage/rocksdb/rocksdb/tools/rocksdb/sst_dump_tool.h
+stdio.h
+-
+
+storage/rocksdb/rocksdb/include/rocksdb/sst_dump_tool.h
+

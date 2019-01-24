@@ -1,0 +1,2 @@
+/usr/bin/ar qc libindex_column_functions.a  CMakeFiles/index_column_functions.dir/index_column.c.o
+/usr/bin/ranlib libindex_column_functions.a

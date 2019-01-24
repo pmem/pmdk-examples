@@ -1,0 +1,2 @@
+/usr/bin/ar qc libpfs_server_stubs.a  CMakeFiles/pfs_server_stubs.dir/pfs_server_stubs.cc.o
+/usr/bin/ranlib libpfs_server_stubs.a

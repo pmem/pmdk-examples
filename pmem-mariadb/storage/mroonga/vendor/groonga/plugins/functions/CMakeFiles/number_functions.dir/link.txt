@@ -1,0 +1,2 @@
+/usr/bin/ar qc libnumber_functions.a  CMakeFiles/number_functions.dir/number.c.o
+/usr/bin/ranlib libnumber_functions.a

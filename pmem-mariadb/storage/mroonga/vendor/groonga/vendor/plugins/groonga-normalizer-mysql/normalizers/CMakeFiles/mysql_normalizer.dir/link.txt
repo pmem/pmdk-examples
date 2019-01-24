@@ -1,0 +1,2 @@
+/usr/bin/ar qc libmysql_normalizer.a  CMakeFiles/mysql_normalizer.dir/mysql.c.o
+/usr/bin/ranlib libmysql_normalizer.a

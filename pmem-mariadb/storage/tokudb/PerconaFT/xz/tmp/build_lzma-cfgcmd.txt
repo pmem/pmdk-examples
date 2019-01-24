@@ -1,0 +1,1 @@
+cmd='<SOURCE_DIR>/configure;--with-pic;--enable-static;CC=/usr/bin/cc ;--enable-debug;--prefix=/home/tcs/server/storage/tokudb/PerconaFT/./xz;--libdir=/home/tcs/server/storage/tokudb/PerconaFT/./xz/lib'

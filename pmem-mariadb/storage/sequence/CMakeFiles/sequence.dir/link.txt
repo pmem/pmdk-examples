@@ -1,0 +1,2 @@
+/usr/bin/ar qc libsequence.a  CMakeFiles/sequence.dir/sequence.cc.o
+/usr/bin/ranlib libsequence.a

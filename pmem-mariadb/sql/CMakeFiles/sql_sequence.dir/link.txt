@@ -1,0 +1,2 @@
+/usr/bin/ar qc libsql_sequence.a  CMakeFiles/sql_sequence.dir/ha_sequence.cc.o
+/usr/bin/ranlib libsql_sequence.a

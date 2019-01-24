@@ -1,0 +1,42 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/tcs/server/extra/mariabackup/crc/crc-intel-pclmul.c
+stdio.h
+-
+stdlib.h
+-
+string.h
+-
+stdint.h
+-
+
+/home/tcs/server/extra/mariabackup/crc/crc-intel-pclmul.h
+stdint.h
+-
+stddef.h
+-
+
+/home/tcs/server/extra/mariabackup/crc/crc_glue.c
+my_config.h
+/home/tcs/server/extra/mariabackup/crc/my_config.h
+crc_glue.h
+/home/tcs/server/extra/mariabackup/crc/crc_glue.h
+crc-intel-pclmul.h
+/home/tcs/server/extra/mariabackup/crc/crc-intel-pclmul.h
+stdint.h
+-
+string.h
+-
+zlib.h
+-
+
+/home/tcs/server/extra/mariabackup/crc/crc_glue.h
+
+include/my_config.h
+

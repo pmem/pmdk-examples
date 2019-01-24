@@ -17,6 +17,9 @@ The following are the needed dependencies:
  - To build and run the samples using the Java bindings, you will need Java 8
    or above (including a Java compiler).
 
+NOTE: pmem-mariadb will not be built automatically. Please, read instructions
+on how to build in `pmem-mariadb/INSTALL-SOURCE`
+
 Build everything doing:
 
 	$ make

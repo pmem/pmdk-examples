@@ -1,0 +1,2 @@
+/usr/bin/ar qc libhsclient.a  CMakeFiles/hsclient.dir/libhsclient/config.cpp.o CMakeFiles/hsclient.dir/libhsclient/escape.cpp.o CMakeFiles/hsclient.dir/libhsclient/fatal.cpp.o CMakeFiles/hsclient.dir/libhsclient/hstcpcli.cpp.o CMakeFiles/hsclient.dir/libhsclient/socket.cpp.o CMakeFiles/hsclient.dir/libhsclient/string_util.cpp.o
+/usr/bin/ranlib libhsclient.a

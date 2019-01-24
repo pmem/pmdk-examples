@@ -1,0 +1,34 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/tcs/server/mysql-test/lib/My/SafeProcess/safe_process.cc
+sys/types.h
+-
+sys/wait.h
+-
+sys/time.h
+-
+sys/resource.h
+-
+unistd.h
+-
+stdarg.h
+-
+stdio.h
+-
+stdlib.h
+-
+signal.h
+-
+string.h
+-
+errno.h
+-
+sys/sysctl.h
+-
+

@@ -1,0 +1,2 @@
+/usr/bin/ar qc libtsv_query_expander.a  CMakeFiles/tsv_query_expander.dir/tsv.c.o
+/usr/bin/ranlib libtsv_query_expander.a

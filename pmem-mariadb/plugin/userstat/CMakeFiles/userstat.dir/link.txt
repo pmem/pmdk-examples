@@ -1,0 +1,2 @@
+/usr/bin/ar qc libuserstat.a  CMakeFiles/userstat.dir/userstat.cc.o
+/usr/bin/ranlib libuserstat.a

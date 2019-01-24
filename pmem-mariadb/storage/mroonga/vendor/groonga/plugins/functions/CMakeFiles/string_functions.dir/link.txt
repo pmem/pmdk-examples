@@ -1,0 +1,2 @@
+/usr/bin/ar qc libstring_functions.a  CMakeFiles/string_functions.dir/string.c.o
+/usr/bin/ranlib libstring_functions.a

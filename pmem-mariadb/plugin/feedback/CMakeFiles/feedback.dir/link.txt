@@ -1,0 +1,2 @@
+/usr/bin/ar qc libfeedback.a  CMakeFiles/feedback.dir/feedback.cc.o CMakeFiles/feedback.dir/sender_thread.cc.o CMakeFiles/feedback.dir/url_base.cc.o CMakeFiles/feedback.dir/url_http.cc.o CMakeFiles/feedback.dir/utils.cc.o
+/usr/bin/ranlib libfeedback.a

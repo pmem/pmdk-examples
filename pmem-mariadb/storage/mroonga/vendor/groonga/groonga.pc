@@ -1,0 +1,20 @@
+prefix=/usr/local/mysql
+exec_prefix=/usr/local/mysql
+bindir=/usr/local/mysql/bin
+sbindir=/usr/local/mysql/sbin
+libdir=/usr/local/mysql/lib
+includedir=/usr/local/mysql/include
+datarootdir=/usr/local/mysql/share
+datadir=/usr/local/mysql/share
+document_root=/usr/local/mysql/share/groonga/html/admin
+pluginsdir=/usr/local/mysql/lib/groonga/plugins
+groonga=${bindir}/groonga
+groonga_httpd=${sbindir}/groonga-httpd
+groonga_suggest_create_dataset=${bindir}/groonga-suggest-create-dataset
+groonga_version=7.0.7
+
+Name: Groonga
+Description: An Embeddable Fulltext Search Engine
+Version: 7.0.7
+Libs: -L${libdir} -lgroonga
+Cflags: -I${includedir}/groonga

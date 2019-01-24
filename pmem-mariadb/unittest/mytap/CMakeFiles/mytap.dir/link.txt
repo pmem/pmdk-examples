@@ -1,0 +1,2 @@
+/usr/bin/ar qc libmytap.a  CMakeFiles/mytap.dir/tap.c.o
+/usr/bin/ranlib libmytap.a

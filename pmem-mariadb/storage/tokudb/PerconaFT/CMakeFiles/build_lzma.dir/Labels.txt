@@ -1,0 +1,14 @@
+# Target labels
+ build_lzma
+# Source files and their labels
+/home/tcs/server/storage/tokudb/PerconaFT/CMakeFiles/build_lzma
+/home/tcs/server/storage/tokudb/PerconaFT/CMakeFiles/build_lzma.rule
+/home/tcs/server/storage/tokudb/PerconaFT/CMakeFiles/build_lzma-complete.rule
+/home/tcs/server/storage/tokudb/PerconaFT/xz/src/build_lzma-stamp/build_lzma-install.rule
+/home/tcs/server/storage/tokudb/PerconaFT/xz/src/build_lzma-stamp/build_lzma-mkdir.rule
+/home/tcs/server/storage/tokudb/PerconaFT/xz/src/build_lzma-stamp/build_lzma-download.rule
+/home/tcs/server/storage/tokudb/PerconaFT/xz/src/build_lzma-stamp/build_lzma-update.rule
+/home/tcs/server/storage/tokudb/PerconaFT/xz/src/build_lzma-stamp/build_lzma-patch.rule
+/home/tcs/server/storage/tokudb/PerconaFT/xz/src/build_lzma-stamp/build_lzma-configure.rule
+/home/tcs/server/storage/tokudb/PerconaFT/xz/src/build_lzma-stamp/build_lzma-build.rule
+/home/tcs/server/storage/tokudb/PerconaFT/xz/src/build_lzma-stamp/build_lzma-reclone_src.rule

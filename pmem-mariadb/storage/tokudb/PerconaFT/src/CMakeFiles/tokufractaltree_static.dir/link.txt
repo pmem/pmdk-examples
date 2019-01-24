@@ -1,0 +1,2 @@
+/usr/bin/gcc-ar qc libtokufractaltree_static.a  CMakeFiles/tokufractaltree_static.dir/tokufractaltree_static_depends.cc.o
+/usr/bin/gcc-ranlib libtokufractaltree_static.a

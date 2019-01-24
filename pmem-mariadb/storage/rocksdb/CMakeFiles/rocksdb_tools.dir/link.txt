@@ -1,0 +1,2 @@
+/usr/bin/ar qc librocksdb_tools.a  CMakeFiles/rocksdb_tools.dir/rocksdb/tools/ldb_tool.cc.o CMakeFiles/rocksdb_tools.dir/rocksdb/tools/ldb_cmd.cc.o CMakeFiles/rocksdb_tools.dir/rocksdb/tools/sst_dump_tool.cc.o
+/usr/bin/ranlib librocksdb_tools.a

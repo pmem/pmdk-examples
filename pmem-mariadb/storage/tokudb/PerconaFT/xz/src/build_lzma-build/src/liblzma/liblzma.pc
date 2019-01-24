@@ -1,0 +1,19 @@
+#
+# Author: Lasse Collin
+#
+# This file has been put into the public domain.
+# You can do whatever you want with this file.
+#
+
+prefix=/home/tcs/server/storage/tokudb/PerconaFT/./xz
+exec_prefix=${prefix}
+libdir=/home/tcs/server/storage/tokudb/PerconaFT/./xz/lib
+includedir=${prefix}/include
+
+Name: liblzma
+Description: General purpose data compression library
+URL: http://tukaani.org/xz/
+Version: 4.999.9beta
+Cflags: -I${includedir}
+Libs: -L${libdir} -llzma
+Libs.private: -pthread 

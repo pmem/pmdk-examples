@@ -1,0 +1,2 @@
+/usr/bin/gcc-ar qc libftcxx.a  CMakeFiles/ftcxx.dir/buffer.cpp.o CMakeFiles/ftcxx.dir/cursor.cpp.o CMakeFiles/ftcxx.dir/db_env.cpp.o CMakeFiles/ftcxx.dir/malloc_utils.cpp.o
+/usr/bin/gcc-ranlib libftcxx.a

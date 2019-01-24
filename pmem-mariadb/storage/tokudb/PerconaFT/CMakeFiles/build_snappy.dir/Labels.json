@@ -1,0 +1,46 @@
+{
+	"sources" : 
+	[
+		{
+			"file" : "/home/tcs/server/storage/tokudb/PerconaFT/CMakeFiles/build_snappy"
+		},
+		{
+			"file" : "/home/tcs/server/storage/tokudb/PerconaFT/CMakeFiles/build_snappy.rule"
+		},
+		{
+			"file" : "/home/tcs/server/storage/tokudb/PerconaFT/CMakeFiles/build_snappy-complete.rule"
+		},
+		{
+			"file" : "/home/tcs/server/storage/tokudb/PerconaFT/snappy/src/build_snappy-stamp/build_snappy-install.rule"
+		},
+		{
+			"file" : "/home/tcs/server/storage/tokudb/PerconaFT/snappy/src/build_snappy-stamp/build_snappy-mkdir.rule"
+		},
+		{
+			"file" : "/home/tcs/server/storage/tokudb/PerconaFT/snappy/src/build_snappy-stamp/build_snappy-download.rule"
+		},
+		{
+			"file" : "/home/tcs/server/storage/tokudb/PerconaFT/snappy/src/build_snappy-stamp/build_snappy-update.rule"
+		},
+		{
+			"file" : "/home/tcs/server/storage/tokudb/PerconaFT/snappy/src/build_snappy-stamp/build_snappy-patch.rule"
+		},
+		{
+			"file" : "/home/tcs/server/storage/tokudb/PerconaFT/snappy/src/build_snappy-stamp/build_snappy-configure.rule"
+		},
+		{
+			"file" : "/home/tcs/server/storage/tokudb/PerconaFT/snappy/src/build_snappy-stamp/build_snappy-build.rule"
+		},
+		{
+			"file" : "/home/tcs/server/storage/tokudb/PerconaFT/snappy/src/build_snappy-stamp/build_snappy-reclone_src.rule"
+		}
+	],
+	"target" : 
+	{
+		"labels" : 
+		[
+			"build_snappy"
+		],
+		"name" : "build_snappy"
+	}
+}

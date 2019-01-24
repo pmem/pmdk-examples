@@ -1,0 +1,1 @@
+--source include/binlog_write_error.inc

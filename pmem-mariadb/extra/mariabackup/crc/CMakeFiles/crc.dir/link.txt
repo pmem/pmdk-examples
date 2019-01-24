@@ -1,0 +1,2 @@
+/usr/bin/ar qc libcrc.a  CMakeFiles/crc.dir/crc_glue.c.o CMakeFiles/crc.dir/crc-intel-pclmul.c.o
+/usr/bin/ranlib libcrc.a

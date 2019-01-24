@@ -1,0 +1,14 @@
+# Target labels
+ build_snappy
+# Source files and their labels
+/home/tcs/server/storage/tokudb/PerconaFT/CMakeFiles/build_snappy
+/home/tcs/server/storage/tokudb/PerconaFT/CMakeFiles/build_snappy.rule
+/home/tcs/server/storage/tokudb/PerconaFT/CMakeFiles/build_snappy-complete.rule
+/home/tcs/server/storage/tokudb/PerconaFT/snappy/src/build_snappy-stamp/build_snappy-install.rule
+/home/tcs/server/storage/tokudb/PerconaFT/snappy/src/build_snappy-stamp/build_snappy-mkdir.rule
+/home/tcs/server/storage/tokudb/PerconaFT/snappy/src/build_snappy-stamp/build_snappy-download.rule
+/home/tcs/server/storage/tokudb/PerconaFT/snappy/src/build_snappy-stamp/build_snappy-update.rule
+/home/tcs/server/storage/tokudb/PerconaFT/snappy/src/build_snappy-stamp/build_snappy-patch.rule
+/home/tcs/server/storage/tokudb/PerconaFT/snappy/src/build_snappy-stamp/build_snappy-configure.rule
+/home/tcs/server/storage/tokudb/PerconaFT/snappy/src/build_snappy-stamp/build_snappy-build.rule
+/home/tcs/server/storage/tokudb/PerconaFT/snappy/src/build_snappy-stamp/build_snappy-reclone_src.rule
