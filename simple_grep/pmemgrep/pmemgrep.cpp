@@ -122,7 +122,7 @@ class file
 	void
 	create_new_line (string linestr, size_t linenum)
 	{
-		transaction::exec_tx (pop, [&] {
+		transaction::run (pop, [&] {
 			struct line new_line;
 
 			/* creating new line */
@@ -146,7 +146,7 @@ class file
 		regex exp (patternstr);
 
 		int ret = 0;
-		transaction::exec_tx (
+		transaction::run (
 		pop,
 		[&] { /* dont leave a file processed
 		       * half way through */
@@ -238,7 +238,7 @@ class pattern
 	create_new_file (const char *filename)
 	{
 		file *new_file;
-		transaction::exec_tx (pop, [&] {
+		transaction::run (pop, [&] {
 			/* allocating new files head */
 			persistent_ptr<file> new_files
 			= make_persistent<file> (filename);
@@ -309,7 +309,7 @@ class root
 	create_new_pattern (const char *patternstr)
 	{
 		pattern *new_pattern;
-		transaction::exec_tx (pop, [&] {
+		transaction::run (pop, [&] {
 			/* allocating new patterns arrray */
 			persistent_ptr<pattern> new_patterns
 			= make_persistent<pattern> (patternstr);
@@ -441,7 +441,7 @@ main (int argc, char *argv[])
 	else /* file exists */
 		pop = pool<root>::open (argv[1], "PMEMGREP");
 
-	auto proot = pop.get_root (); /* read root structure */
+	auto proot = pop.root (); /* read root structure */
 
 	if (argc == 2) /* No pattern is provided. Print stored patterns and exit
 	                  */

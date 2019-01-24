@@ -31,7 +31,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 task_list::task_list (pmem::obj::pool_base &pop)
 {
 
-	pmem::obj::transaction::exec_tx (pop, [&] {
+	pmem::obj::transaction::run (pop, [&] {
 
 		head_map = nullptr;
 		head_red = nullptr;
@@ -46,7 +46,7 @@ task_list::insert (pmem::obj::pool_base &pop,
 
 	pmem::obj::persistent_ptr<list_entry> aux;
 
-	pmem::obj::transaction::exec_tx (pop, [&] {
+	pmem::obj::transaction::run (pop, [&] {
 
 		if (entry->get_task_type () == TASK_TYPE_MAP) {
 

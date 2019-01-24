@@ -31,7 +31,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 list_entry::list_entry (pmem::obj::pool_base &pop)
 {
 
-	pmem::obj::transaction::exec_tx (pop, [&] {
+	pmem::obj::transaction::run (pop, [&] {
 
 		this->next = nullptr;
 		this->status = TASK_ST_NEW;
@@ -50,7 +50,7 @@ list_entry::set_next (pmem::obj::pool_base &pop,
                       pmem::obj::persistent_ptr<list_entry> next)
 {
 
-	pmem::obj::transaction::exec_tx (pop, [&] {
+	pmem::obj::transaction::run (pop, [&] {
 
 		this->next = next;
 
@@ -61,7 +61,7 @@ void
 list_entry::set_status (pmem::obj::pool_base &pop, uint8_t status)
 {
 
-	pmem::obj::transaction::exec_tx (pop, [&] {
+	pmem::obj::transaction::run (pop, [&] {
 
 		this->status = status;
 
@@ -72,7 +72,7 @@ void
 list_entry::set_task_type (pmem::obj::pool_base &pop, uint8_t task_type)
 {
 
-	pmem::obj::transaction::exec_tx (pop, [&] {
+	pmem::obj::transaction::run (pop, [&] {
 
 		this->task_type = task_type;
 
@@ -83,7 +83,7 @@ void
 list_entry::set_start_byte (pmem::obj::pool_base &pop, size_t s_byte)
 {
 
-	pmem::obj::transaction::exec_tx (pop, [&] {
+	pmem::obj::transaction::run (pop, [&] {
 
 		this->start_byte = s_byte;
 
@@ -94,7 +94,7 @@ void
 list_entry::set_n_lines (pmem::obj::pool_base &pop, size_t n)
 {
 
-	pmem::obj::transaction::exec_tx (pop, [&] {
+	pmem::obj::transaction::run (pop, [&] {
 
 		this->n_lines = n;
 
@@ -105,7 +105,7 @@ void
 list_entry::allocate_kv (pmem::obj::pool_base &pop, size_t bytes)
 {
 
-	pmem::obj::transaction::exec_tx (pop, [&] {
+	pmem::obj::transaction::run (pop, [&] {
 
 		kv = pmem::obj::make_persistent<char[]> (bytes);
 		alloc_bytes = bytes;
@@ -118,7 +118,7 @@ list_entry::add_to_kv (pmem::obj::pool_base &pop, std::vector<std::string> &keys
                        std::vector<size_t> &values)
 {
 
-	pmem::obj::transaction::exec_tx (pop, [&] {
+	pmem::obj::transaction::run (pop, [&] {
 
 		struct kv_tuple *kvt;
 		size_t offset = 0;
@@ -141,7 +141,7 @@ void
 list_entry::delete_kv (pmem::obj::pool_base &pop)
 {
 
-	pmem::obj::transaction::exec_tx (pop, [&] {
+	pmem::obj::transaction::run (pop, [&] {
 
 		pmem::obj::delete_persistent<char[]> (kv, alloc_bytes);
 		kv = nullptr;

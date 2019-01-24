@@ -30,13 +30,13 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 persistent_string::persistent_string (pmem::obj::pool_base &pop)
 {
-	pmem::obj::transaction::exec_tx (pop, [&] { str = nullptr; });
+	pmem::obj::transaction::run (pop, [&] { str = nullptr; });
 }
 
 void
 persistent_string::reset (pmem::obj::pool_base &pop)
 {
-	pmem::obj::transaction::exec_tx (pop, [&] {
+	pmem::obj::transaction::run (pop, [&] {
 		pmemobj_tx_add_range_direct (sso, 1);
 		sso[0] = 0;
 		if (str) {
@@ -49,7 +49,7 @@ persistent_string::reset (pmem::obj::pool_base &pop)
 void
 persistent_string::set (pmem::obj::pool_base &pop, std::string *value)
 {
-	pmem::obj::transaction::exec_tx (pop, [&] {
+	pmem::obj::transaction::run (pop, [&] {
 		unsigned long length = value->length ();
 		if (length <= SSO_CHARS) {
 			if (str) { /* reset old string */

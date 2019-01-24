@@ -179,7 +179,7 @@ pm_mapreduce::run_job (void)
 void
 pm_mapreduce::get_job_progress (int &map, int &reduce)
 {
-	auto proot = pop.get_root ();
+	auto proot = pop.root ();
 	auto task_list = &(proot->tlist);
 
 	size_t t_tasks, t_map_tasks, c_tasks, c_map_tasks;
@@ -217,7 +217,7 @@ pm_mapreduce::print_job_progress (void)
 void
 pm_mapreduce::write_results (void)
 {
-	auto proot = pop.get_root ();
+	auto proot = pop.root ();
 	auto task_list = &(proot->tlist);
 
 	pmem::obj::persistent_ptr<list_entry> tsk;
@@ -283,7 +283,7 @@ pm_mapreduce::load_input_data (void)
 	}
 	closedir (dir);
 
-	auto proot = pop.get_root ();
+	auto proot = pop.root ();
 
 	/* now we go over all files loading the input data */
 	std::string lines;
@@ -307,7 +307,7 @@ pm_mapreduce::load_input_data (void)
 	}
 
 	/* persisting... */
-	pmem::obj::transaction::exec_tx (pop, [&] {
+	pmem::obj::transaction::run (pop, [&] {
 		proot->input
 		= pmem::obj::make_persistent<persistent_string> (pop);
 		proot->input->set (pop, &lines);
@@ -319,7 +319,7 @@ pm_mapreduce::load_input_data (void)
 void
 pm_mapreduce::clean_up_dirty_tasks (void)
 {
-	auto proot = pop.get_root ();
+	auto proot = pop.root ();
 	auto task_list = &(proot->tlist);
 	task_list->clean_up_dirty_tasks (pop);
 }
@@ -327,7 +327,7 @@ pm_mapreduce::clean_up_dirty_tasks (void)
 int
 pm_mapreduce::create_initial_tasks (void)
 {
-	auto proot = pop.get_root ();
+	auto proot = pop.root ();
 	auto task_list = &(proot->tlist);
 
 	std::vector<size_t> lines_info;
@@ -338,7 +338,7 @@ pm_mapreduce::create_initial_tasks (void)
 	if (n_chunks == 0) /* empty input */
 		return 1;
 
-	pmem::obj::transaction::exec_tx (pop, [&] {
+	pmem::obj::transaction::run (pop, [&] {
 		/* Adding new MAP tasks to list */
 		for (size_t i = 0; i < n_chunks; i++) {
 			auto tsk = pmem::obj::make_persistent<list_entry> (pop);
@@ -367,7 +367,7 @@ pm_mapreduce::main_thread_loop (void)
 	int o_reduce = 0;
 	int reduce = 0;
 
-	auto proot = pop.get_root ();
+	auto proot = pop.root ();
 
 	print_job_progress ();
 	/* iterate and print progress until job is completed */
@@ -418,11 +418,11 @@ void
 pm_mapreduce::ret_available_map_task (pmem::obj::persistent_ptr<list_entry> &tsk,
                                       bool &all_done)
 {
-	auto proot = pop.get_root ();
+	auto proot = pop.root ();
 	auto task_list = &(proot->tlist);
 
 	/* LOCKED TRANSACTION */
-	pmem::obj::transaction::exec_tx (
+	pmem::obj::transaction::run (
 	pop,
 	[&] {
 		all_done = false;
@@ -438,11 +438,11 @@ pm_mapreduce::ret_available_map_task (pmem::obj::persistent_ptr<list_entry> &tsk
 void
 pm_mapreduce::process_map_task (pmem::obj::persistent_ptr<list_entry> tsk)
 {
-	auto proot = pop.get_root ();
+	auto proot = pop.root ();
 	auto task_list = &(proot->tlist);
 
 	/*** MAIN TRANSACTION ***/
-	pmem::obj::transaction::exec_tx (pop, [&] {
+	pmem::obj::transaction::run (pop, [&] {
 		/* This is the reduce task that will
 		   be outputed */
 		pmem::obj::persistent_ptr<list_entry> new_red_tsk;
@@ -492,7 +492,7 @@ pm_mapreduce::process_map_task (pmem::obj::persistent_ptr<list_entry> tsk)
 		/* This locked transaction adds the lock to
 		   the main transaction from this point
 		   until the end */
-		pmem::obj::transaction::exec_tx (
+		pmem::obj::transaction::run (
 		pop,
 		[&] {
 			task_list->insert (pop, new_red_tsk);
@@ -533,7 +533,7 @@ void pm_mapreduce::ret_available_red_task (
 pmem::obj::persistent_ptr<list_entry> (&tsk)[2], bool &only_one_left,
 bool &all_done)
 {
-	auto proot = pop.get_root ();
+	auto proot = pop.root ();
 	auto task_list = &(proot->tlist);
 
 	/* locked region */
@@ -565,7 +565,7 @@ bool &all_done)
 		     || (tsk[0] == nullptr && all_done);
 	});
 
-	pmem::obj::transaction::exec_tx (pop, [&] {
+	pmem::obj::transaction::run (pop, [&] {
 		if (tsk[0] != nullptr)
 			tsk[0]->set_status (pop, TASK_ST_BUSY);
 		if (tsk[1] != nullptr)
@@ -580,11 +580,11 @@ void
 pm_mapreduce::process_red_tasks (pmem::obj::persistent_ptr<list_entry> tsk[2],
                                  bool only_one_left)
 {
-	auto proot = pop.get_root ();
+	auto proot = pop.root ();
 	auto task_list = &(proot->tlist);
 
 	/*** MAIN TRANSACTION ***/
-	pmem::obj::transaction::exec_tx (pop, [&] {
+	pmem::obj::transaction::run (pop, [&] {
 
 		/* this is the reduce task that will be outputed */
 		pmem::obj::persistent_ptr<list_entry> new_red_tsk;
@@ -672,7 +672,7 @@ pm_mapreduce::process_red_tasks (pmem::obj::persistent_ptr<list_entry> tsk[2],
 		/* this locked transaction adds the lock to
 		   the main transaction from this point
 		   until the end */
-		pmem::obj::transaction::exec_tx (
+		pmem::obj::transaction::run (
 		pop,
 		[&] {
 			task_list->insert (pop, new_red_tsk);

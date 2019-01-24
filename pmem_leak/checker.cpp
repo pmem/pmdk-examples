@@ -55,7 +55,7 @@ main (int argc, char *argv[])
 		return 1;
 	}
 	pop = pool<root>::open (argv[1], "PMEMLEAK");
-	auto proot = pop.get_root ();
+	auto proot = pop.root ();
 
 	/* iterating over all objects... */
 	persistent_ptr<employee> tail_ptr;

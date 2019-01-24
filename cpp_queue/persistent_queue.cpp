@@ -48,7 +48,7 @@ void
 PersistentQueue::push(long long int value)
 {
 	auto pool = pmem::obj::pool_by_vptr(this);
-	obj::transaction::exec_tx(pool, [this, &value] {
+	obj::transaction::run(pool, [this, &value] {
 		auto n = obj::make_persistent<Node>(value, nullptr);
 
 		if (head == nullptr) {
@@ -65,7 +65,7 @@ PersistentQueue::pop()
 {
 	long long int ret = 0;
 	auto pool = pmem::obj::pool_by_vptr(this);
-	obj::transaction::exec_tx(pool, [this, &ret] {
+	obj::transaction::run(pool, [this, &ret] {
 		if (head == nullptr)
 			throw std::runtime_error("Nothing to pop");
 

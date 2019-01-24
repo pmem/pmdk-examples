@@ -40,3 +40,4 @@ clean:
 	for dir in $(SUBDIRS); do \
 		make -C $$dir clean; \
 	done
+	rm .configok

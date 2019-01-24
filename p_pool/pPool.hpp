@@ -86,7 +86,7 @@ class Cone
 	public:
 	Cone (params *pdata)
 	{
-		pobj::transaction::exec_tx (pdata->pop,
+		pobj::transaction::run (pdata->pop,
 		                            [&] {
 			                            radius = pdata->r;
 			                            height = pdata->height;
@@ -118,7 +118,7 @@ class Cone
 	void
 	set_values (params *pdata)
 	{
-		pobj::transaction::exec_tx (
+		pobj::transaction::run (
 		pdata->pop,
 		[&] {
 			if (radius > DIVISOR) {
@@ -152,7 +152,7 @@ class Triangle
 	public:
 	Triangle (params *pdata)
 	{
-		pobj::transaction::exec_tx (pdata->pop,
+		pobj::transaction::run (pdata->pop,
 		                            [&] {
 			                            base = pdata->base;
 			                            height = pdata->height;
@@ -183,7 +183,7 @@ class Triangle
 	void
 	set_values (params *pdata)
 	{
-		pobj::transaction::exec_tx (
+		pobj::transaction::run (
 		pdata->pop,
 		[&] {
 			if (base > DIVISOR) {
@@ -216,7 +216,7 @@ class Sphere
 	public:
 	Sphere (params *pdata)
 	{
-		pobj::transaction::exec_tx (pdata->pop,
+		pobj::transaction::run (pdata->pop,
 		                            [&] {
 			                            radius = pdata->r; // 8
 			                                               // bytes
@@ -276,7 +276,7 @@ class Circle
 	public:
 	Circle (params *pdata)
 	{
-		pobj::transaction::exec_tx (pdata->pop,
+		pobj::transaction::run (pdata->pop,
 		                            [&] {
 			                            radius = pdata->r; // 8
 			                                               // bytes

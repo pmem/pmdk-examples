@@ -77,7 +77,7 @@ void write_hello_string (char *input, char *path)
 	pop = pobj::pool<root>::create (path, LAYOUT,
 									 PMEMOBJ_MIN_POOL, S_IRUSR | S_IWUSR);
 	// Get pool object
-	pool = pop.get_root ();
+	pool = pop.root ();
 	
 	// Store the input into persistent memory
 	pobj::make_persistent_atomic<Hello> (pop, pool->hello, input);
@@ -102,7 +102,7 @@ void read_hello_string(char *path)
 
 	/* Open the pool in persistent memory */
 	pop = pobj::pool<root>::open (path, LAYOUT);
-	pool = pop.get_root ();
+	pool = pop.root ();
 
 	// Write to the console
 	cout << endl    << "\nRead the ("	<< pool->hello->get_hello_msg()

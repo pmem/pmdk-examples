@@ -56,7 +56,7 @@ main (int argc, char *argv[])
 		return 1;
 	}
 	pop = pool<root>::open (argv[1], "PMEMLEAK");
-	auto proot = pop.get_root ();
+	auto proot = pop.root ();
 
 	/* iterating over all objects... */
 	persistent_ptr<employee> tail_ptr;
@@ -94,7 +94,7 @@ main (int argc, char *argv[])
 		size_t recovered = 0;
 
 		/* iterating over all allocated objects in the pool... */
-		POBJ_FOREACH (pop.get_handle (), raw_obj)
+		POBJ_FOREACH (pop.handle (), raw_obj)
 		{
 
 			/* checking if object is of type 'employee' */
@@ -114,7 +114,7 @@ main (int argc, char *argv[])
 					}
 				}
 				if (found == true) { /* recovering object */
-					transaction::exec_tx(pop, [&] {
+					transaction::run(pop, [&] {
 						emp->next = proot->employees;
 						proot->employees = emp;
 					});

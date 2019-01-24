@@ -61,10 +61,10 @@ main (int argc, char *argv[])
 		remove (argv[1]);
 	}
 	pop = pool<root>::create (argv[1], "PMEMLEAK", POOLSIZE, S_IRWXU);
-	auto proot = pop.get_root ();
+	auto proot = pop.root ();
 
 	/* initialization... */
-	transaction::exec_tx (pop, [&] {
+	transaction::run (pop, [&] {
 		proot->num_employees = 0;
 		proot->employees = nullptr;
 	});
@@ -73,7 +73,7 @@ main (int argc, char *argv[])
 	persistent_ptr<employee> new_ptr;
 
 	for (size_t i = 64; i > 0; i--) {
-		transaction::exec_tx (pop, [&] {
+		transaction::run (pop, [&] {
 			new_ptr = make_persistent<employee> ();
 
 			new_ptr->id = i - 1;

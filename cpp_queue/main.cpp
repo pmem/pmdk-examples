@@ -149,11 +149,11 @@ main(int argc, char *argv[])
 		/* allocate the persistent queue only when the pool is new */
 		pmem::obj::make_persistent_atomic<
 			pmem::examples::PersistentQueue>(
-			pop, pop.get_root()->pqueue);
+			pop, pop.root()->pqueue);
 	}
 
 	/* get the root object pointer */
-	auto proot = pop.get_root();
+	auto proot = pop.root();
 
 	/* always allocate the volatile queue */
 	proot->vqueue = new pmem::examples::VolatileQueue();

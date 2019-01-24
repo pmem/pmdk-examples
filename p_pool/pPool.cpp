@@ -225,10 +225,10 @@ main (int argc, char *argv[])
 
 		pop1 = pobj::pool<root>::create (PERS_MEM_POOL1, LAYOUT1,
 		                                 POOLSIZE, S_IRUSR | S_IWUSR);
-		pool1 = pop1.get_root ();
+		pool1 = pop1.root ();
 		params vars = params (pop1, 5.76, 10, 20.19);
 
-		pobj::transaction::exec_tx (pop1, [&] {
+		pobj::transaction::run (pop1, [&] {
 			pool1->circle = pobj::make_persistent<Circle> (&vars);
 			pool1->sphere = pobj::make_persistent<Sphere> (&vars);
 		});
@@ -237,7 +237,7 @@ main (int argc, char *argv[])
 		     << "File Exists -- Open file: " << PERS_MEM_POOL1 << endl;
 
 		pop1 = pobj::pool<root>::open (PERS_MEM_POOL1, LAYOUT1);
-		pool1 = pop1.get_root ();
+		pool1 = pop1.root ();
 	}
 	/* pool1 End */
 
@@ -251,10 +251,10 @@ main (int argc, char *argv[])
 
 		pop2 = pobj::pool<root>::create (PERS_MEM_POOL2, LAYOUT2,
 		                                 POOLSIZE, S_IRUSR | S_IWUSR);
-		pool2 = pop2.get_root ();
+		pool2 = pop2.root ();
 		params vars = params (pop2, 7.76, 11, 22.19);
 
-		pobj::transaction::exec_tx (pop2, [&] {
+		pobj::transaction::run (pop2, [&] {
 			pool2->triangle = pobj::make_persistent<Triangle> (&vars);
 			pool2->cone = pobj::make_persistent<Cone> (&vars);
 		});
@@ -262,7 +262,7 @@ main (int argc, char *argv[])
 		cout << endl
 		     << "File Exists -- Open file: " << PERS_MEM_POOL2 << endl;
 		pop2 = pobj::pool<root>::open (PERS_MEM_POOL2, LAYOUT2);
-		pool2 = pop2.get_root ();
+		pool2 = pop2.root ();
 	}
 	/* pool2 End */
 
