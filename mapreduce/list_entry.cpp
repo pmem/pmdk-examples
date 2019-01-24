@@ -26,7 +26,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
 
-#include <list_entry.hpp>
+#include "list_entry.hpp"
 
 list_entry::list_entry (pmem::obj::pool_base &pop)
 {

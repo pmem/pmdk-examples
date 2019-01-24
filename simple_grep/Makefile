@@ -24,20 +24,16 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-PROGS = cpp_queue
-OBJS = main.o persistent_queue.o volatile_queue.o
-CXXFLAGS = $(shell pkg-config --cflags libpmemobj++) -std=c++11 -O2
-LDFLAGS = $(shell pkg-config --libs libpmemobj++) -O2
-CXX = g++
-RM = rm
 
-%.o : %.cpp
-	$(CXX) $(CXXFLAGS) -c $< -o $@
+SUBDIRS = grep pmemgrep pmemgrep_thx
 
-all: $(PROGS)
-
-cpp_queue: $(OBJS)
-	$(CXX) $(OBJS) $(LDFLAGS) -o $@
+all:
+	for dir in $(SUBDIRS); do \
+		make -C $$dir; \
+	done
 
 clean:
-	$(RM) $(OBJS) $(PROGS)
+	for dir in $(SUBDIRS); do \
+		make -C $$dir clean; \
+	done
+	

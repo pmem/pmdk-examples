@@ -15,11 +15,8 @@ Oracle Java version 8 or above needs to be properly installed in your system.
 The default java compiler used is javac. Please, read the README at the root
 directory of the repository for more information.
 
-The build process will compile and use the latest master branch version of PMDK
-(libpmemobj is part of PMDK). Refer to LLPL on GitHub* on how to install
-(https://github.com/pmem/llpl) If you want to use a custom installed version of
-PMDK, you can change the PMDK_EXAMPLES_INCLUDE and PMDK_EXAMPLES_LIB_NONDEBUG
-variables in common.mk appropriately.
+If you need to install LLPL, please refer to LLPL on GitHub on how to install
+(https://github.com/pmem/llpl). 
 
 ## PREREQUISITES TO RUN
 

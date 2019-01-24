@@ -24,15 +24,12 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-export PMDK_EXAMPLES_DIR = $(shell pwd)/..
-include ../common.mk
-
 EmployeeList:
-	javac -cp .:$(PMDK_EXAMPLES_PCJ_HOME)/target/classes Employee.java
-	javac -cp .:$(PMDK_EXAMPLES_PCJ_HOME)/target/classes EmployeeList.java
+	javac -cp .:$(PCJ_HOME)/target/classes Employee.java
+	javac -cp .:$(PCJ_HOME)/target/classes EmployeeList.java
 
 run:
-	java -cp .:$(PMDK_EXAMPLES_PCJ_HOME)/target/classes -Djava.library.path=$(PMDK_EXAMPLES_PCJ_HOME)/target/cppbuild EmployeeList
+	java -cp .:$(PCJ_HOME)/target/classes -Djava.library.path=$(PCJ_HOME)/target/cppbuild EmployeeList
 
 clean:
 	rm *.class

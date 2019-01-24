@@ -26,7 +26,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
 
-#include <pm_mapreduce.hpp>
+#include "pm_mapreduce.hpp"
 
 pm_mapreduce::pm_mapreduce (int argc, char *argv[])
 {

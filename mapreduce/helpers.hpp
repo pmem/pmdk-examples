@@ -31,7 +31,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <fstream>
 #include <iostream>
-#include <pm_mapreduce.hpp>
+#include "pm_mapreduce.hpp"
 #include <stdlib.h>
 #include <string>
 #include <unistd.h>

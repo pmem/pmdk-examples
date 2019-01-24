@@ -25,9 +25,10 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 
-
-export PMDK_EXAMPLES_DIR = $(shell pwd)/../..
-include ../../common.mk
+CFLAGS = $(shell pkg-config --cflags libpmemblk) -O2
+LDFLAGS = $(shell pkg-config --libs libpmemblk) -O2
+CC = gcc
+RM = rm
 
 %.o: %.cpp
 	$(CC) -c $< -o $@ $(CFLAGS)

@@ -26,7 +26,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
 
-#include <persistent_string.hpp>
+#include "persistent_string.hpp"
 
 persistent_string::persistent_string (pmem::obj::pool_base &pop)
 {

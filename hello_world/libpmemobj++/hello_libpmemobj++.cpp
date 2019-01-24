@@ -33,7 +33,7 @@ SPDX-License-Identifier: BSD-3-Clause
  * hello.cpp -- an example for libpmemobj++ library
  */
 
-#include <hello_libpmemobj++.hpp>
+#include "hello_libpmemobj++.hpp"
 #include <errno.h>
 
 /* Functions */

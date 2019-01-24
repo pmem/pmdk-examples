@@ -24,15 +24,12 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-export PMDK_EXAMPLES_DIR = $(shell pwd)/../..
-include ../../common.mk
-
 Hello_llpl:
-	javac  -cp .:$(PMDK_EXAMPLES_LLPL_HOME)/target/classes  Hello_llpl.java
+	javac  -cp .:$(LLPL_HOME)/target/classes  Hello_llpl.java
 
 
 run:
-	java  -cp .:$(PMDK_EXAMPLES_LLPL_HOME)/target/classes -Djava.library.path=$(PMDK_EXAMPLES_LLPL_HOME)/target/cppbuild Hello_llpl
+	java  -cp .:$(LLPL_HOME)/target/classes -Djava.library.path=$(LLPL_HOME)/target/cppbuild Hello_llpl
 
 
 clean:

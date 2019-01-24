@@ -25,8 +25,10 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 
-export PMDK_EXAMPLES_DIR = $(shell pwd)/..
-include ../common.mk
+CXXFLAGS = $(shell pkg-config --cflags libpmemobj++) -std=c++11 -O2
+LDFLAGS = $(shell pkg-config --libs libpmemobj++) -lpthread -O2
+CXX = g++
+RM = rm
 
 %.o: %.cpp
 	$(CXX) -c $< -o $@ $(CXXFLAGS)

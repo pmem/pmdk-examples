@@ -29,7 +29,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <string>
 #include <vector>
 
-#include <pm_mapreduce.hpp>
+#include "pm_mapreduce.hpp"
 
 using namespace std;
 

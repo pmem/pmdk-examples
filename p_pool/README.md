@@ -11,17 +11,8 @@ application can read and update data in the persistent-memory pools.
 
 To build this sample, download/clone the [pmdk-examples
 repository](https://github.com/pmem/pmdk-examples).  A Makefile is provided. To
-compile this sample, just type `make p_pool` from the root directory of the
-repository, or `make` from this location; a C++ compiler needs to be properly
-installed in your system. The default C++ compiler used is `g++`. You can
-change that by setting the `CXX` variable in `common.mk`. Alternatively, you
-can build all samples by typing `make`. Please, read the README at the root
-directory of the repository for more information.
-
-The build process will compile and use the latest master branch version of PMDK
-(libpmemobj is part of PMDK). If you want to use a custom installed version of
-PMDK, you can change the `PMDK_EXAMPLES_INCLUDE` and
-`PMDK_EXAMPLES_LIB_NONDEBUG` variables in `common.mk` appropriately.
+compile this sample, just type `make` from the root directory of the
+repository.
 
 ### How to Run
 

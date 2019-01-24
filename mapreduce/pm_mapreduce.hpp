@@ -37,10 +37,10 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <thread>
 #include <vector>
 
-#include <helpers.hpp>
-#include <list_entry.hpp>
-#include <persistent_string.hpp>
-#include <task_list.hpp>
+#include "helpers.hpp"
+#include "list_entry.hpp"
+#include "persistent_string.hpp"
+#include "task_list.hpp"
 
 #include <libpmemobj++/condition_variable.hpp>
 #include <libpmemobj++/make_persistent.hpp>

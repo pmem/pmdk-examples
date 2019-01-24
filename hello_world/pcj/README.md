@@ -15,11 +15,8 @@ Oracle Java version 8 or above needs to be properly installed in your system.
 The default java compiler used is javac. Please, read the README at the root
 directory of the repository for more information.
 
-The build process will compile and use the latest master branch version of PMDK
-(libpmemobj is part of PMDK). Refer to PCJ on GitHub* on how to install PCJ
-(https://github.com/pmem/pcj). If you want to use a custom installed version of
-PMDK, you can change the PMDK_EXAMPLES_INCLUDE and PMDK_EXAMPLES_LIB_NONDEBUG
-variables in common.mk appropriately.
+If you need to install PCJ, please refer to PCJ on GitHub on how to install PCJ
+(https://github.com/pmem/pcj). 
 
 ## PREREQUISITES TO RUN
 
