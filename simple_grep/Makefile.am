@@ -1,2 +1,2 @@
 AUTOMAKE_OPTIONS = foreign
-SUBDIRS = grep
+SUBDIRS = grep pmemgrep pmemgrep_thx

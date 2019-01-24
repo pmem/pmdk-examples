@@ -1,3 +1,5 @@
 AUTOMAKE_OPTIONS = foreign
-bin_PROGRAMS = pmemgrep_thx
-pmemgrep_thx_SOURCES = pmemgrep_thx.cpp
+bin_PROGRAMS = pmemgrep
+pmemgrep_SOURCES = pmemgrep.cpp
+pmemgrep_CPPFLAGS = $(PMEM_CFLAGS) $(PMEMOBJ_CFLAGS) $(PMEMOBJPP_CFLAGS)
+pmemgrep_LDFLAGS = $(PMEM_LIBS) $(PMEMOBJ_LIBS) $(PMEMOBJPP_LIBS)
