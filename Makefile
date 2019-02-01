@@ -33,6 +33,7 @@ all: .configok
 	for dir in $(SUBDIRS); do \
 		make -C $$dir; \
 	done
+	rm .configok
 .configok:
 	./check_config.sh
 
@@ -40,4 +41,3 @@ clean:
 	for dir in $(SUBDIRS); do \
 		make -C $$dir clean; \
 	done
-	rm .configok

@@ -41,24 +41,40 @@ if ! command -v g++ &> /dev/null ; then
 	exit 1
 fi
 
-pkg-config --exists libpmem
+ret=$(pkg-config --modversion libpmem)
 if (( $? > 0 )); then
 	echo libpmem not found
 	exit 1
 fi
-pkg-config --exists libpmemblk
-if (( $? > 0 )); then
-	echo libpmemblk not found
+if [ "$ret" != "1.5" ]; then
+	echo libpmem v1.5 not found
 	exit 1
 fi
-pkg-config --exists libpmemobj
+ret=$(pkg-config --modversion libpmemblk)
 if (( $? > 0 )); then
-	echo libpmemobj not found
+	echo libpmemblk v1.5 not found
 	exit 1
 fi
-pkg-config --exists libpmemobj++
+if [ "$ret" != "1.5" ]; then
+	echo libpmemblk v1.5 not found
+	exit 1
+fi
+ret=$(pkg-config --modversion libpmemobj)
 if (( $? > 0 )); then
-	echo libpmemobj++ not found
+	echo libpmemobj v1.5 not found
+	exit 1
+fi
+if [ "$ret" != "1.5" ]; then
+	echo libpmemobj v1.5 not found
+	exit 1
+fi
+ret=$(pkg-config --modversion libpmemobj++)
+if (( $? > 0 )); then
+	echo libpmemobj++ v1.5 not found
+	exit 1
+fi
+if [ "$ret" != "1.5" ]; then
+	echo libpmemobj++ v1.5 not found
 	exit 1
 fi
 
