@@ -44,14 +44,14 @@ class Hello_llpl
 	 *****************************/
 	public static void write_hello_string (byte[] input, Heap h, int size)	
 	{
-		// block allocation of Flushable class
-		MemoryBlock<Flushable> newBlock = h.allocateMemoryBlock(Flushable.class, size);
+		// block allocation (transactional allocation)
+		MemoryBlock newBlock = h.allocateMemoryBlock(size, true);
 		
 		//Attached the newBllock to the root address
-		h.setRoot(newBlock.address());
+		h.setRoot(newBlock.handle());
 
-		// Write byte array (input) to newBlock @ offset 0 for 26 bytes
-		h.copyFromArray(input, 0, newBlock, 0, size);
+		// Write byte array (input) to newBlock @ offset 0 (on both) for 26 bytes
+		newBlock.copyFromArray(input, 0, 0, size);
 
 		//Ensure that the array (input) is in persistent memory
 		newBlock.flush();
@@ -77,10 +77,10 @@ class Hello_llpl
 			System.exit(0);
 		} 
 		// Map the newBlock to the root of Flushable class
-		MemoryBlock<Flushable> newBlock = h.memoryBlockFromAddress(Flushable.class, rootAddr);
+		MemoryBlock newBlock = h.memoryBlockFromHandle(rootAddr);
 		
 		// Read 26 bytes @ offset 0 from newBlock to byte array (output)
-		h.copyToArray(newBlock, 0L, output, 0, size);
+		newBlock.copyToArray(0L, output, 0, size);
 
 		//Convert byte array (output) to String format and write to console
 		System.out.printf("\nRead the (%s) string from persistent-memory.\n",new String(output));
