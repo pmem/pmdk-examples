@@ -46,35 +46,39 @@ if (( $? > 0 )); then
 	echo libpmem not found
 	exit 1
 fi
-if [ "$ret" != "1.5" ]; then
-	echo libpmem v1.5 not found
+ret1=$(echo "$ret < 1.5" | bc -l)
+if (( $ret1 > 0 )); then
+	echo need libpmem v1.5 or higher
 	exit 1
 fi
 ret=$(pkg-config --modversion libpmemblk)
 if (( $? > 0 )); then
-	echo libpmemblk v1.5 not found
+	echo libpmemblk not found
 	exit 1
 fi
-if [ "$ret" != "1.5" ]; then
-	echo libpmemblk v1.5 not found
+ret1=$(echo "$ret < 1.5" | bc -l)
+if (( $ret1 > 0 )); then
+	echo need libpmemblk v1.5 or higher
 	exit 1
 fi
 ret=$(pkg-config --modversion libpmemobj)
 if (( $? > 0 )); then
-	echo libpmemobj v1.5 not found
+	echo libpmemobj not found
 	exit 1
 fi
-if [ "$ret" != "1.5" ]; then
-	echo libpmemobj v1.5 not found
+ret1=$(echo "$ret < 1.5" | bc -l)
+if (( $ret1 > 0 )); then
+	echo need libpmemobj v1.5 or higher
 	exit 1
 fi
 ret=$(pkg-config --modversion libpmemobj++)
 if (( $? > 0 )); then
-	echo libpmemobj++ v1.5 not found
+	echo libpmemobj++ not found
 	exit 1
 fi
-if [ "$ret" != "1.5" ]; then
-	echo libpmemobj++ v1.5 not found
+ret1=$(echo "$ret < 1.5" | bc -l)
+if (( $ret1 > 0 )); then
+	echo need libpmemobj++ v1.5 or higher
 	exit 1
 fi
 
