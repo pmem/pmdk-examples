@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2017-2019, Intel Corporation
+# Copyright (c) 2019, Intel Corporation
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -24,21 +24,36 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+#!/bin/bash
 
-SUBDIRS = mapreduce simple_grep cpp_queue pmem_leak employees p_pool hello_world find_all
+if (( $# < 3 )); then
+	echo "USE: $0 tree-root tree-depth files-per-level"
+fi
+tree_root=$1
+tree_depth=$2
+files_per_level=$3
 
-GCC_TEST := $(shell command -v gcc 2> /dev/null)
+if [[ -d $tree_root ]]; then
+	read -p "Directory root $tree_root already exists. Do you want to delete it? (y/N) " deldir
+	if [[ $deldir = "y" ]]; then
+		rm -fr $tree_root
+	fi
+fi
 
-all: .configok
-	for dir in $(SUBDIRS); do \
-		make -C $$dir; \
-	done
-	rm .configok
-.configok:
-	./check_config.sh
+create_subdir () {
+	if (( $2 > 0 )); then
+		mkdir $1
+		cd $1
+		for i in `seq 1 $3`; do
+			new_name=$(cat /dev/urandom | tr -dc 'a-z' | fold -w 32 | head -n 1)
+			touch $new_name
+		done
+		for i in `seq 1 3`; do
+			new_name=$(cat /dev/urandom | tr -dc 'a-z' | fold -w 5 | head -n 1)
+			create_subdir $new_name $(($2-1)) $3
+		done
+		cd ..
+	fi
+}
 
-clean:
-	for dir in $(SUBDIRS); do \
-		make -C $$dir clean; \
-	done
-	rm .configok
+create_subdir $tree_root $tree_depth $files_per_level

@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2017-2019, Intel Corporation
+# Copyright (c) 2019, Intel Corporation
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -24,21 +24,24 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+PROGS = find-all find-all-pm
+OBJS = find-all.o find-all-pm.o
+PMEM_FLAGS = -lpmem -lpmemobj -lpthread
 
-SUBDIRS = mapreduce simple_grep cpp_queue pmem_leak employees p_pool hello_world find_all
+CXX = g++
 
-GCC_TEST := $(shell command -v gcc 2> /dev/null)
+all: $(PROGS)
+.PHONY : all
 
-all: .configok
-	for dir in $(SUBDIRS); do \
-		make -C $$dir; \
-	done
-	rm .configok
-.configok:
-	./check_config.sh
+%.o : %.cpp
+	$(CXX) -std=c++11 -O2 -c $< -o $@
+
+find-all: find-all.o
+	$(CXX) $< -O2 -o $@
+
+find-all-pm: find-all-pm.o
+	$(CXX) $< $(PMEM_FLAGS) -O2 -o $@
 
 clean:
-	for dir in $(SUBDIRS); do \
-		make -C $$dir clean; \
-	done
-	rm .configok
+	$(RM) $(OBJS) $(PROGS)
+
