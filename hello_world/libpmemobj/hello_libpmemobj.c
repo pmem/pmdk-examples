@@ -76,12 +76,13 @@ void write_hello_string (char *buf, char *path)
 	struct my_root *rootp = pmemobj_direct(root);
 
 	// Write the string to persistent memory
-	// Assign the string length and persist it
-	rootp->len = strlen(buf);
-	pmemobj_persist(pop, &rootp->len, sizeof (rootp->len));
-	
+
 	// Copy string and persist it
 	pmemobj_memcpy_persist(pop, rootp->buf, buf, rootp->len);
+
+	// Assign the string length and persist it
+	rootp->len = strlen(buf);
+	pmemobj_persist(pop, &rootp->len, sizeof (rootp->len));	
 
 	// Write the string from persistent memory 	to console
 	printf("\nWrite the (%s) string to persistent-memory.\n", rootp->buf);
