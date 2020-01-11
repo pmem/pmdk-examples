@@ -78,7 +78,7 @@ void write_hello_string (char *buf, char *path)
 	// Write the string to persistent memory
 
 	// Copy string and persist it
-	pmemobj_memcpy_persist(pop, rootp->buf, buf, rootp->len);
+	pmemobj_memcpy_persist(pop, rootp->buf, buf, strlen(buf));
 
 	// Assign the string length and persist it
 	rootp->len = strlen(buf);
