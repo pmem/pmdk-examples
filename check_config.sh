@@ -41,43 +41,49 @@ if ! command -v g++ &> /dev/null ; then
 	exit 1
 fi
 
+REQMAJOR=1
+REQMINOR=5
+
 ret=$(pkg-config --modversion libpmem)
 if (( $? > 0 )); then
 	echo libpmem not found
 	exit 1
 fi
-ret1=$(echo "$ret < 1.5" | bc -l)
-if (( $ret1 > 0 )); then
+IFS=. VER=(${ret##*-})
+if (( ${VER[0]} < $REQMAJOR || ${VER[0]} >= $REQMAJOR && ${VER[1]} < $REQMINOR )); then
 	echo need libpmem v1.5 or higher
 	exit 1
 fi
+
 ret=$(pkg-config --modversion libpmemblk)
 if (( $? > 0 )); then
 	echo libpmemblk not found
 	exit 1
 fi
-ret1=$(echo "$ret < 1.5" | bc -l)
-if (( $ret1 > 0 )); then
+IFS=. VER=(${ret##*-})
+if (( ${VER[0]} < $REQMAJOR || ${VER[0]} >= $REQMAJOR && ${VER[1]} < $REQMINOR )); then
 	echo need libpmemblk v1.5 or higher
 	exit 1
 fi
+
 ret=$(pkg-config --modversion libpmemobj)
 if (( $? > 0 )); then
 	echo libpmemobj not found
 	exit 1
 fi
-ret1=$(echo "$ret < 1.5" | bc -l)
-if (( $ret1 > 0 )); then
+IFS=. VER=(${ret##*-})
+if (( ${VER[0]} < $REQMAJOR || ${VER[0]} >= $REQMAJOR && ${VER[1]} < $REQMINOR )); then
 	echo need libpmemobj v1.5 or higher
 	exit 1
 fi
+
 ret=$(pkg-config --modversion libpmemobj++)
 if (( $? > 0 )); then
 	echo libpmemobj++ not found
 	exit 1
 fi
-ret1=$(echo "$ret < 1.5" | bc -l)
-if (( $ret1 > 0 )); then
+IFS=. VER=(${ret##*-})
+if (( ${VER[0]} < $REQMAJOR || ${VER[0]} >= $REQMAJOR && ${VER[1]} < $REQMINOR )); then
 	echo need libpmemobj++ v1.5 or higher
 	exit 1
 fi
