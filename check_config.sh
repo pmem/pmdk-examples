@@ -41,9 +41,9 @@ if ! command -v g++ &> /dev/null ; then
 	exit 1
 fi
 
-REQMAJOR=1
-REQMINOR=5
 
+REQMAJOR=1
+REQMINOR=8
 ret=$(pkg-config --modversion libpmem)
 if (( $? > 0 )); then
 	echo libpmem not found
@@ -51,7 +51,7 @@ if (( $? > 0 )); then
 fi
 IFS=. VER=(${ret##*-})
 if (( ${VER[0]} < $REQMAJOR || ${VER[0]} >= $REQMAJOR && ${VER[1]} < $REQMINOR )); then
-	echo need libpmem v1.5 or higher
+	echo need libpmem v1.8 or higher
 	exit 1
 fi
 
@@ -62,7 +62,7 @@ if (( $? > 0 )); then
 fi
 IFS=. VER=(${ret##*-})
 if (( ${VER[0]} < $REQMAJOR || ${VER[0]} >= $REQMAJOR && ${VER[1]} < $REQMINOR )); then
-	echo need libpmemblk v1.5 or higher
+	echo need libpmemblk v1.8 or higher
 	exit 1
 fi
 
@@ -73,10 +73,12 @@ if (( $? > 0 )); then
 fi
 IFS=. VER=(${ret##*-})
 if (( ${VER[0]} < $REQMAJOR || ${VER[0]} >= $REQMAJOR && ${VER[1]} < $REQMINOR )); then
-	echo need libpmemobj v1.5 or higher
+	echo need libpmemobj v1.8 or higher
 	exit 1
 fi
 
+REQMAJOR=1
+REQMINOR=10
 ret=$(pkg-config --modversion libpmemobj++)
 if (( $? > 0 )); then
 	echo libpmemobj++ not found
@@ -84,9 +86,23 @@ if (( $? > 0 )); then
 fi
 IFS=. VER=(${ret##*-})
 if (( ${VER[0]} < $REQMAJOR || ${VER[0]} >= $REQMAJOR && ${VER[1]} < $REQMINOR )); then
-	echo need libpmemobj++ v1.5 or higher
+	echo need libpmemobj++ v1.10 or higher
 	exit 1
 fi
+
+REQMAJOR=1
+REQMINOR=2
+ret=$(pkg-config --modversion libpmemkv)
+if (( $? > 0 )); then
+	echo libpmemkv not found
+	exit 1
+fi
+IFS=. VER=(${ret##*-})
+if (( ${VER[0]} < $REQMAJOR || ${VER[0]} >= $REQMAJOR && ${VER[1]} < $REQMINOR )); then
+	echo need libpmemkv v1.2 or higher
+	exit 1
+fi
+
 
 if ! command -v javac &> /dev/null ; then
 	echo WARNING !! javac not found, PCJ and LLPL samples will not build

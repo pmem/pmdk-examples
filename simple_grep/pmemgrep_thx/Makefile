@@ -26,8 +26,8 @@
 
 PROGS = pmemgrep
 OBJS = pmemgrep.o
-CXXFLAGS = $(shell pkg-config --cflags libpmemobj++) -std=c++11 -O2
-LDFLAGS = $(shell pkg-config --libs libpmemobj++) -lpthread -O2
+CXXFLAGS = $(shell pkg-config --cflags libpmemobj++) $(shell pkg-config --cflags libpmemkv) -std=c++11 -O2
+LDFLAGS = $(shell pkg-config --libs libpmemobj++) $(shell pkg-config --libs libpmemkv) -lpthread -O2
 CXX = g++
 RM = rm
 

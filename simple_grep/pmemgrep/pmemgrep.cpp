@@ -32,21 +32,25 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <unistd.h>
 #include <fstream>
 #include <iostream>
-#include <libpmemobj++/allocator.hpp>
 #include <libpmemobj++/make_persistent.hpp>
 #include <libpmemobj++/make_persistent_array.hpp>
 #include <libpmemobj++/persistent_ptr.hpp>
 #include <libpmemobj++/transaction.hpp>
+#include <libpmemkv.hpp>
 #include <regex>
 #include <string.h>
 #include <string>
+#include <string_view>
 #include <vector>
+#include <cassert>
 
-#define POOLSIZE ((size_t) (1024 * 1024 * 256)) /* 256 MB */
+#define GBSIZE ((size_t) (1024 * 1024 * 1024))
+#define POOLSIZE ((size_t) (GBSIZE * 16))
 
 using namespace std;
 using namespace pmem;
 using namespace pmem::obj;
+using namespace pmem::kv;
 
 
 /* globals */
@@ -56,368 +60,338 @@ pool<root> pop;
 
 /* persistent data structures */
 
-struct line {
-	persistent_ptr<char[]> linestr;
-	p<size_t> linenum;
-};
-
-class file
-{
-	private:
-	persistent_ptr<file> next;
-	persistent_ptr<char[]> name;
-	p<time_t> mtime;
-	vector<line, pmem::obj::allocator<line>> lines;
-
-	public:
-	file (const char *filename)
-	{
-		name = make_persistent<char[]> (strlen (filename) + 1);
-		strcpy (name.get (), filename);
-		mtime = 0;
-	}
-
-	char *
-	get_name (void)
-	{
-		return name.get ();
-	}
-
-	size_t
-	get_nlines (void)
-	{
-		return lines.size (); /* nlines; */
-	}
-
-	struct line *
-	get_line (size_t index)
-	{
-		return &(lines[index]);
-	}
-
-	persistent_ptr<file>
-	get_next (void)
-	{
-		return next;
-	}
-
-	void
-	set_next (persistent_ptr<file> n)
-	{
-		next = n;
-	}
-
-	time_t
-	get_mtime (void)
-	{
-		return mtime;
-	}
-
-	void
-	set_mtime (time_t mt)
-	{
-		mtime = mt;
-	}
-
-	void
-	create_new_line (string linestr, size_t linenum)
-	{
-		transaction::run (pop, [&] {
-			struct line new_line;
-
-			/* creating new line */
-			new_line.linestr
-			= make_persistent<char[]> (linestr.length () + 1);
-			strcpy (new_line.linestr.get (), linestr.c_str ());
-			new_line.linenum = linenum;
-
-			lines.push_back (new_line);
-		});
-	}
-
-	int
-	process_pattern (const char *str)
-	{
-		std::ifstream fd (name.get ());
-		string line;
-
-		string patternstr ("(.*)(");
-		patternstr += string (str) + string (")(.*)");
-		regex exp (patternstr);
-
-		int ret = 0;
-		transaction::run (
-		pop,
-		[&] { /* dont leave a file processed
-		       * half way through */
-		      if (fd.is_open ()) {
-			      size_t linenum = 0;
-			      while (getline (fd, line)) {
-				      ++linenum;
-				      if (regex_match (line, exp))
-					      /* adding this line... */
-					      create_new_line (line, linenum);
-			      }
-		      } else {
-			      cout
-			      << "unable to open file " + string (name.get ())
-			      << endl;
-			      ret = -1;
-		      }
-		});
-		return ret;
-	}
-
-	void
-	remove_lines ()
-	{
-		lines.clear ();
-	}
-};
-
 class pattern
 {
-	private:
-	persistent_ptr<pattern> next;
-	persistent_ptr<char[]> patternstr;
-	persistent_ptr<file> files;
-	p<size_t> nfiles;
+    private:
+    struct file
+    {
+        char name[1024];
+        time_t mtime;
+        size_t num_lines;
+        size_t raw_data_alloc;
+        char raw_data[0];
+    };
 
-	public:
-	pattern (const char *str)
-	{
-		patternstr = make_persistent<char[]> (strlen (str) + 1);
-		strcpy (patternstr.get (), str);
-		files = nullptr;
-		nfiles = 0;
-	}
+    persistent_ptr<pattern> next;
+    persistent_ptr<char[]> patternstr;
+    PMEMoid files_db_index;
+    db *files_db;
 
-	file *
-	get_file (size_t index)
-	{
-		persistent_ptr<file> ptr = files;
-		size_t i = 0;
-		while (i < index && ptr != nullptr) {
-			ptr = ptr->get_next ();
-			i++;
-		}
-		return ptr.get ();
-	}
+    static void
+    get_mtime_callback (const char *value, size_t vsize, void *args)
+    {
+        time_t *mtime = (time_t *) args;
+        struct file *f = (struct file *) value;
+        *mtime = f->mtime;
+    }
 
-	persistent_ptr<pattern>
-	get_next (void)
-	{
-		return next;
-	}
+    int
+    get_mtime (const char *filename, time_t *mtime)
+    {
+        status ret;
 
-	void
-	set_next (persistent_ptr<pattern> n)
-	{
-		next = n;
-	}
+        ret = files_db->get (filename, get_mtime_callback, (void *) mtime);
+        if (ret == status::NOT_FOUND)
+            return -1;
+        assert (ret == status::OK);
 
-	char *
-	get_str (void)
-	{
-		return patternstr.get ();
-	}
+        return 0; 
+    }
 
-	file *
-	find_file (const char *filename)
-	{
-		persistent_ptr<file> ptr = files;
-		while (ptr != nullptr) {
-			if (strcmp (filename, ptr->get_name ()) == 0)
-				return ptr.get ();
-			ptr = ptr->get_next ();
-		}
-		return nullptr;
-	}
+    static int
+    print_callback (const char *key, 
+                    size_t skey, 
+                    const char *value, 
+                    size_t svalue,
+                    void *args)
+    {
+        const struct file *f = (struct file *) value;
+        cout << "" << endl;
+        cout << "###############" << endl;
+        cout << "FILE = " << key << endl;
+        cout << "###############" << endl;
+        cout << "*** pattern present in " << f->num_lines;
+        cout << " lines ***" << endl;
 
-	file *
-	create_new_file (const char *filename)
-	{
-		file *new_file;
-		transaction::run (pop, [&] {
-			/* allocating new files head */
-			persistent_ptr<file> new_files
-			= make_persistent<file> (filename);
-			/* making the new allocation the actual head */
-			new_files->set_next (files);
-			files = new_files;
-			nfiles = nfiles + 1;
+        for (size_t j = f->num_lines; j > 0; j--) {
+            size_t *meta_array = (size_t *) &(f->raw_data[0]);
+            const char *lines_array = &(f->raw_data[(f->num_lines)*2*sizeof(size_t)]);
+            cout << meta_array[(j-1)*2] << ": ";
+            cout << string (&(lines_array[meta_array[(j-1)*2+1]]));
+            cout << endl;
+        }
+        return 0;
+    }
 
-			new_file = files.get ();
-		});
-		return new_file;
-	}
+    void
+    put_file (const struct file *f)
+    {
+        status ret;
+        size_t obj_size = sizeof (struct file) + f->raw_data_alloc;
 
-	void
-	print (void)
-	{
-		cout << "PATTERN = " << patternstr.get () << endl;
-		cout << "\t" << nfiles << " files(s) scanned" << endl;
-		for (size_t i = 0; i < nfiles; i++) {
-			file *f = get_file (i);
-			cout << "###############" << endl;
-			cout << "FILE = " << f->get_name () << endl;
-			cout << "###############" << endl;
-			cout << "*** pattern present in " << f->get_nlines ();
-			cout << " lines ***" << endl;
-			for (size_t j = f->get_nlines (); j > 0; j--) {
-				cout << f->get_line (j - 1)->linenum << ": ";
-				cout
-				<< string (f->get_line (j - 1)->linestr.get ());
-				cout << endl;
-			}
-		}
-	}
+        string_view key   = string_view (f->name, strlen(f->name));
+        string_view value = string_view ((char *) f, obj_size);
+
+        ret = files_db->put (key, value);
+        assert (ret == status::OK);
+    }
+
+    void
+    create_new_line (struct file **f, string linestr, size_t linenum)
+    {
+        struct file *old_f = *f;
+        struct file *new_f;
+        size_t new_obj_size = 0;
+
+        new_obj_size += sizeof (struct file);
+        new_obj_size += old_f->raw_data_alloc;
+        new_obj_size += sizeof (size_t) * 2;
+        new_obj_size += linestr.length () + 1;
+
+        // malloc mem for new object
+        new_f = (struct file *) malloc (new_obj_size);
+        if (new_f == nullptr)
+            throw runtime_error ("Error calling malloc");
+
+        // copying old data
+        memcpy ((void *) new_f, 
+                (const void *) old_f, 
+                sizeof (struct file));
+
+        memcpy ((void *) &(new_f->raw_data[0]),
+                (const void *) &(old_f->raw_data[0]),
+                sizeof (size_t) * 2 * old_f->num_lines);
+
+        size_t size_old_lines_array 
+                    = old_f->raw_data_alloc - (sizeof (size_t) * 2 * old_f->num_lines);
+        char *old_lines_array 
+                    = &(old_f->raw_data[old_f->num_lines * 2 * sizeof (size_t)]);
+
+        new_f->num_lines += 1;
+        char *lines_array  = &(new_f->raw_data[new_f->num_lines * 2 * sizeof (size_t)]);
+
+        memcpy ((void *) lines_array, 
+                (const void *) old_lines_array, 
+                size_old_lines_array);
+
+        // copying new data
+        new_f->raw_data_alloc += (sizeof (size_t) * 2) + linestr.length () + 1;
+        size_t *meta_array = (size_t *) &(new_f->raw_data[0]);
+
+        strcpy (&(lines_array[size_old_lines_array]), linestr.c_str ());
+        meta_array[(old_f->num_lines)*2]   = linenum;
+        meta_array[(old_f->num_lines)*2+1] = size_old_lines_array+1;
+
+        // change pointers
+        free (old_f);
+        *f = new_f;
+    }
+
+    public:    
+    void
+    process_file (const char *filename, time_t mtime)
+    {
+        time_t stored_mtime;
+        int ret;
+        
+        ret = get_mtime (filename, &stored_mtime);
+        if (!ret && difftime (mtime, stored_mtime) == 0) // up to date
+            return;
+
+        struct file *f = (struct file *) malloc (sizeof (struct file));
+        if (f == nullptr)
+            throw runtime_error ("Error calling malloc");
+
+        strcpy (f->name, filename);
+        f->mtime          = mtime;
+        f->num_lines      = 0;
+        f->raw_data_alloc = 0;           
+
+        // scanning file for lines matching pattern
+        ifstream fd (filename);
+        string line;
+
+        string pat ("(.*)(");
+        pat += string (patternstr.get ()) + string (")(.*)");
+        regex exp (pat);
+
+        if (fd.is_open ()) {
+            size_t linenum = 0;
+            while (getline (fd, line)) {
+                ++linenum;
+                if (regex_match (line, exp)) 
+                    create_new_line (&f, line, linenum);                
+            }
+        } else {
+            char err[2048];
+            sprintf (err, "unable to open file %s", filename);
+            throw runtime_error (err);
+        }
+
+        put_file (f);
+
+        free (f);
+    }
+
+    pattern (const char *str)
+    {
+        patternstr = make_persistent<char[]> (strlen (str) + 1);
+        strcpy (patternstr.get (), str);
+        files_db_index = OID_NULL;
+    }
+
+    void
+    start (void)
+    {
+        config cfg;
+        status ret;
+        string objn = string("oid");
+
+        ret = cfg.put_object (objn, &files_db_index, nullptr);
+        assert (ret == status::OK);
+
+        files_db = new db ();
+        assert (files_db != nullptr);
+
+        ret = files_db->open ("cmap", move (cfg));
+        assert (ret == status::OK);
+    }
+
+    void
+    stop (void)
+    {
+        delete files_db;
+    }
+
+    persistent_ptr<pattern>
+    get_next (void)
+    {
+        return next;
+    }
+
+    void
+    set_next (persistent_ptr<pattern> n)
+    {
+        next = n;
+    }
+
+    char *
+    get_str (void)
+    {
+        return patternstr.get ();
+    }
+
+    void
+    print (void)
+    {
+        status ret;
+        size_t cnt;
+        
+        ret = files_db->count_all (cnt);
+        assert (ret == status::OK);
+
+        cout << "PATTERN = " << patternstr.get () << endl;
+        cout << "\t" << cnt << " files(s) scanned" << endl;
+        
+        ret = files_db->get_all (print_callback, nullptr);
+        assert (ret == status::OK);
+    }
 };
 
 class root
 {
-	private:
-	p<size_t> npatterns;
-	persistent_ptr<pattern> patterns;
+    private:
+    p<size_t> npatterns;
+    persistent_ptr<pattern> patterns;
 
-	public:
-	pattern *
-	get_pattern (size_t index)
-	{
-		persistent_ptr<pattern> ptr = patterns;
-		size_t i = 0;
-		while (i < index && ptr != nullptr) {
-			ptr = ptr->get_next ();
-			i++;
-		}
-		return ptr.get ();
-	}
+    public:
+    pattern *
+    get_pattern (size_t index)
+    {
+        persistent_ptr<pattern> ptr = patterns;
+        size_t i = 0;
+        while (i < index && ptr != nullptr) {
+            ptr = ptr->get_next ();
+            i++;
+        }
+        return ptr.get ();
+    }
 
-	pattern *
-	find_pattern (const char *patternstr)
-	{
-		persistent_ptr<pattern> ptr = patterns;
-		while (ptr != nullptr) {
-			if (strcmp (patternstr, ptr->get_str ()) == 0)
-				return ptr.get ();
-			ptr = ptr->get_next ();
-		}
-		return nullptr;
-	}
+    pattern *
+    find_pattern (const char *patternstr)
+    {
+        persistent_ptr<pattern> ptr = patterns;
+        while (ptr != nullptr) {
+            if (strcmp (patternstr, ptr->get_str ()) == 0)
+                return ptr.get ();
+            ptr = ptr->get_next ();
+        }
+        return nullptr;
+    }
 
-	pattern *
-	create_new_pattern (const char *patternstr)
-	{
-		pattern *new_pattern;
-		transaction::run (pop, [&] {
-			/* allocating new patterns arrray */
-			persistent_ptr<pattern> new_patterns
-			= make_persistent<pattern> (patternstr);
-			/* making the new allocation the actual head */
-			new_patterns->set_next (patterns);
-			patterns = new_patterns;
-			npatterns = npatterns + 1;
+    pattern *
+    create_new_pattern (const char *patternstr)
+    {
+        transaction::run (pop, [&] {
+            persistent_ptr<pattern> new_patterns 
+                                = make_persistent<pattern> (patternstr);
+            new_patterns->set_next (patterns);
+            patterns = new_patterns;
+            npatterns = npatterns + 1;
+        });
+        return patterns.get ();
+    }
 
-			new_pattern = patterns.get ();
-		});
-		return new_pattern;
-	}
-
-	void
-	print_patterns (void)
-	{
-		cout << npatterns << " PATTERNS PROCESSED" << endl;
-		for (size_t i = 0; i < npatterns; i++)
-			cout << string (get_pattern (i)->get_str ()) << endl;
-	}
+    void
+    print_patterns (void)
+    {
+        cout << npatterns << " PATTERNS PROCESSED" << endl;
+        for (size_t i = 0; i < npatterns; i++)
+            cout << string (get_pattern (i)->get_str ()) << endl;
+    }
 };
 
 /* auxiliary functions */
 
-int
-process_reg_file (pattern *p, const char *filename, const time_t mtime)
-{
-	file *f = p->find_file (filename);
-	if (f != nullptr && difftime (mtime, f->get_mtime ()) == 0) /* file
-	                                                               exists */
-		return 0;
-	if (f == nullptr) /* file does not exist */
-		f = p->create_new_file (filename);
-	else /* file exists but it has an old timestamp (modification) */
-		f->remove_lines ();
-	if (f->process_pattern (p->get_str ()) < 0) {
-		cout << "problems processing file " << filename << endl;
-		return -1;
-	}
-	f->set_mtime (mtime);
-	return 0;
-}
-
-int
+void
 process_directory_recursive (const char *dirname,
                              vector<tuple<string, time_t>> &files)
 {
-	DIR *dp;
-	struct dirent *dirp;
-	struct stat st;
-	char *entryname;
+    DIR *dp;
+    struct dirent *dirp;
+    struct stat st;
+    char *entryname;
 
-	if ((dp = opendir(dirname)) == NULL) {
-		cout << "Error number = " << errno << " opening " << dirname << endl;
-		return -1;
-	}
-        while ((dirp = readdir(dp)) != NULL) {
-                entryname = (char *) malloc (strlen(dirname)+strlen(dirp->d_name)+2);
-                if (entryname==NULL)
-                        return -1;
-                sprintf (entryname, "%s/%s", dirname, dirp->d_name);
+    if ((dp = opendir(dirname)) == NULL) {
+        cout << "Error number = " << errno << " opening " << dirname << endl;
+        throw runtime_error ("Error calling opendir()");
+    }
+    while ((dirp = readdir(dp)) != NULL) {
+        entryname = (char *) malloc (strlen(dirname)+strlen(dirp->d_name)+2);
+        if (entryname==NULL)
+            throw runtime_error ("Error calling malloc()");
+        sprintf (entryname, "%s/%s", dirname, dirp->d_name);
 
-                stat (entryname, &st);
-                if (st.st_mode & S_IFREG)
-                        files.push_back (
-			tuple<string, time_t> (string(entryname), st.st_mtime));
-                else if (st.st_mode & S_IFDIR) {
-                        if (strcmp(".",dirp->d_name)!=0 &&
-                            strcmp("..",dirp->d_name)!=0) {
-                                if (process_directory_recursive (entryname, files)
-                                < 0)
-                                        return -1;
-                        }
-                }
-                free (entryname);
+        stat (entryname, &st);
+        if (st.st_mode & S_IFREG)
+            files.push_back (tuple<string, time_t> (string(entryname), st.st_mtime));
+        else if (st.st_mode & S_IFDIR) {
+            if (strcmp(".",dirp->d_name)!=0 && strcmp("..",dirp->d_name)!=0)
+                process_directory_recursive (entryname, files);            
         }
-	return 0;
+        free (entryname);
+    }
 }
 
-int
+void
 process_directory (pattern *p, const char *dirname)
 {
-	vector<tuple<string, time_t>> files;
-	if (process_directory_recursive (dirname, files) < 0)
-		return -1;
+    vector<tuple<string, time_t>> files;
+    process_directory_recursive (dirname, files);
 
-	for (vector<tuple<string, time_t>>::iterator it = files.begin ();
-	     it != files.end (); ++it)
-		if (process_reg_file (p, get<0> (*it).c_str (), get<1> (*it)) < 0)
-			return -1;
-	return 0;
-}
-
-int
-process_input (struct pattern *p, const char *input)
-{
-	struct stat st;
-
-	if (stat (input, &st) == 0) {
-		if (st.st_mode & S_IFREG)
-			return process_reg_file (p, input, st.st_mtime);
-		else if (st.st_mode & S_IFDIR)
-			return process_directory (p, input);
-	} else {
-		cout << string (input);
-		cout << " is not a valid input" << endl;
-	}
-	return -1;
+    for (vector<tuple<string, time_t>>::iterator it = files.begin ();
+             it != files.end (); ++it)
+        p->process_file (get<0> (*it).c_str (), get<1> (*it));   
 }
 
 /*
@@ -426,35 +400,55 @@ process_input (struct pattern *p, const char *input)
 int
 main (int argc, char *argv[])
 {
+    struct stat st;
 
-	/* reading params */
-	if (argc < 2) {
-		cout << "USE " << string (argv[0]) << " pmem-file [pattern] ";
-		cout << "[input]";
-		cout << endl << flush;
-		return 1;
-	}
+    /* reading params */
+    if (argc < 2) {
+        cout << "USE " << string (argv[0]) << " pmem-file [pattern] ";
+        cout << "[input]";
+        cout << endl << flush;
+        return 1;
+    }
 
-	/* Opening pmem-file */
-	if (access (argv[1], F_OK)) /* new file */
-		pop = pool<root>::create (argv[1], "PMEMGREP", POOLSIZE, S_IRWXU);
-	else /* file exists */
-		pop = pool<root>::open (argv[1], "PMEMGREP");
+    try {
 
-	auto proot = pop.root (); /* read root structure */
+        /* Opening pmem-file */
+        if (access (argv[1], F_OK)) /* new file */
+            pop = pool<root>::create (argv[1], "PMEMGREP", POOLSIZE, S_IRWXU);
+        else /* file exists */
+            pop = pool<root>::open (argv[1], "PMEMGREP");
 
-	if (argc == 2) /* No pattern is provided. Print stored patterns and exit
-	                  */
-		proot->print_patterns ();
-	else {
-		pattern *p = proot->find_pattern (argv[2]);
-		if (p == nullptr) /* If not found, one is created */
-			p = proot->create_new_pattern (argv[2]);
+        auto proot = pop.root (); /* read root structure */
 
-		if (argc == 3) /* No input is provided. Print data and exit */
-			p->print ();
-		else
-			return process_input (p, argv[3]);
-	}
-	return 0;
+        if (argc == 2) /* No pattern is provided. Print stored patterns and exit
+                              */
+            proot->print_patterns ();
+        else {
+            pattern *p = proot->find_pattern (argv[2]);
+            if (p == nullptr) /* If not found, one is created */
+                p = proot->create_new_pattern (argv[2]);            
+
+            p->start ();
+
+            if (argc == 3) /* No input is provided. Print data and exit */
+                p->print ();
+            else {
+                if (stat (argv[3], &st) == 0) {
+                    if (st.st_mode & S_IFREG)
+                        p->process_file (argv[3], st.st_mtime);
+                    else if (st.st_mode & S_IFDIR)
+                        process_directory (p, argv[3]);
+                } else {
+                    cout << string (argv[3]);
+                    cout << " is not a valid input" << endl;
+                }
+            }
+            p->stop();
+        }
+
+    } catch (exception &e) {
+        cerr << "Exception occured: " << e.what() << endl;
+    }
+
+    return 0;
 }
