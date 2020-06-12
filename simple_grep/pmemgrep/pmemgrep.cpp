@@ -106,19 +106,25 @@ class pattern
                     void *args)
     {
         const struct file *f = (struct file *) value;
-        cout << "" << endl;
-        cout << "###############" << endl;
-        cout << "FILE = " << key << endl;
-        cout << "###############" << endl;
-        cout << "*** pattern present in " << f->num_lines;
-        cout << " lines ***" << endl;
+        size_t *cnt = (size_t *) args;
 
-        for (size_t j = f->num_lines; j > 0; j--) {
-            size_t *meta_array = (size_t *) &(f->raw_data[0]);
-            const char *lines_array = &(f->raw_data[(f->num_lines)*2*sizeof(size_t)]);
-            cout << meta_array[(j-1)*2] << ": ";
-            cout << string (&(lines_array[meta_array[(j-1)*2+1]]));
-            cout << endl;
+        if (f->num_lines > 0) {
+            cout << "" << endl;
+            cout << "###############" << endl;
+            cout << "FILE = " << key << endl;
+            cout << "###############" << endl;
+            cout << "*** pattern present in " << f->num_lines;
+            cout << " lines ***" << endl;
+
+            for (size_t j = f->num_lines; j > 0; j--) {
+                size_t *meta_array = (size_t *) &(f->raw_data[0]);
+                const char *lines_array = &(f->raw_data[(f->num_lines)*2*sizeof(size_t)]);
+                cout << meta_array[(j-1)*2] << ": ";
+                cout << string (&(lines_array[meta_array[(j-1)*2+1]]));
+                cout << endl;
+            }
+
+            *cnt += 1;
         }
         return 0;
     }
@@ -285,16 +291,13 @@ class pattern
     print (void)
     {
         status ret;
-        size_t cnt;
-        
-        ret = files_db->count_all (cnt);
-        assert (ret == status::OK);
+        size_t cnt = 0;
 
         cout << "PATTERN = " << patternstr.get () << endl;
-        cout << "\t" << cnt << " files(s) scanned" << endl;
         
-        ret = files_db->get_all (print_callback, nullptr);
+        ret = files_db->get_all (print_callback, (void *) &cnt);
         assert (ret == status::OK);
+        cout << "\n\t" << cnt << " file(s) scanned" << endl;
     }
 };
 
