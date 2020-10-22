@@ -49,7 +49,7 @@ if (( $? > 0 )); then
 	echo libpmem not found
 	exit 1
 fi
-IFS=. VER=(${ret##*-})
+IFS=. VER=(${ret%%*-})
 if (( ${VER[0]} < $REQMAJOR || ${VER[0]} >= $REQMAJOR && ${VER[1]} < $REQMINOR )); then
 	echo need libpmem v1.8 or higher
 	exit 1
@@ -60,7 +60,7 @@ if (( $? > 0 )); then
 	echo libpmemblk not found
 	exit 1
 fi
-IFS=. VER=(${ret##*-})
+IFS=. VER=(${ret%%*-})
 if (( ${VER[0]} < $REQMAJOR || ${VER[0]} >= $REQMAJOR && ${VER[1]} < $REQMINOR )); then
 	echo need libpmemblk v1.8 or higher
 	exit 1
@@ -71,7 +71,7 @@ if (( $? > 0 )); then
 	echo libpmemobj not found
 	exit 1
 fi
-IFS=. VER=(${ret##*-})
+IFS=. VER=(${ret%%*-})
 if (( ${VER[0]} < $REQMAJOR || ${VER[0]} >= $REQMAJOR && ${VER[1]} < $REQMINOR )); then
 	echo need libpmemobj v1.8 or higher
 	exit 1
@@ -84,7 +84,7 @@ if (( $? > 0 )); then
 	echo libpmemobj++ not found
 	exit 1
 fi
-IFS=. VER=(${ret##*-})
+IFS=. VER=(${ret%%*-})
 if (( ${VER[0]} < $REQMAJOR || ${VER[0]} >= $REQMAJOR && ${VER[1]} < $REQMINOR )); then
 	echo need libpmemobj++ v1.10 or higher
 	exit 1
@@ -97,7 +97,7 @@ if (( $? > 0 )); then
 	echo libpmemkv not found
 	exit 1
 fi
-IFS=. VER=(${ret##*-})
+IFS=. VER=(${ret%%*-})
 if (( ${VER[0]} < $REQMAJOR || ${VER[0]} >= $REQMAJOR && ${VER[1]} < $REQMINOR )); then
 	echo need libpmemkv v1.2 or higher
 	exit 1
