@@ -42,3 +42,5 @@ clean:
 		make -C $$dir clean; \
 	done
 	rm .configok
+
+#makefile reference
