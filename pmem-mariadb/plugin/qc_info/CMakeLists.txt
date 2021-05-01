@@ -1,5 +1,0 @@
-INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/sql
-                    ${PCRE_INCLUDES}
-                    ${CMAKE_SOURCE_DIR}/extra/yassl/include)
-
-MYSQL_ADD_PLUGIN(QUERY_CACHE_INFO qc_info.cc RECOMPILE_FOR_EMBEDDED)

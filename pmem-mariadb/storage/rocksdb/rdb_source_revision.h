@@ -1,1 +1,0 @@
-#define ROCKSDB_GIT_HASH "ba295cda29daee3ffe58549542804efdfd969784"

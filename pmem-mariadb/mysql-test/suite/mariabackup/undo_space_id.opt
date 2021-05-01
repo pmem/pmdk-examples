@@ -1,2 +1,0 @@
---debug=d,innodb_undo_upgrade,force_rebootstrap
---innodb_undo_tablespaces=2

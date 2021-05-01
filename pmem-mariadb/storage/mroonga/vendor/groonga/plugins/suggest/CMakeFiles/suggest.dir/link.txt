@@ -1,2 +1,0 @@
-/usr/bin/ar qc libsuggest.a  CMakeFiles/suggest.dir/suggest.c.o
-/usr/bin/ranlib libsuggest.a

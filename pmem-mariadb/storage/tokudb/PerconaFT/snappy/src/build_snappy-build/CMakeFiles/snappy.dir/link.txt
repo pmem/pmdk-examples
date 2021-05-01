@@ -1,2 +1,0 @@
-/usr/bin/gcc-ar qc libsnappy.a  CMakeFiles/snappy.dir/snappy.cc.o CMakeFiles/snappy.dir/snappy-c.cc.o CMakeFiles/snappy.dir/snappy-sinksource.cc.o CMakeFiles/snappy.dir/snappy-stubs-internal.cc.o
-/usr/bin/gcc-ranlib libsnappy.a

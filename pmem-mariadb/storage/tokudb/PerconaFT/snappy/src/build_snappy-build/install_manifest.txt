@@ -1,3 +1,0 @@
-/home/tcs/server/storage/tokudb/PerconaFT/snappy/lib/libsnappy.a
-/home/tcs/server/storage/tokudb/PerconaFT/snappy/include/snappy.h
-/home/tcs/server/storage/tokudb/PerconaFT/snappy/include/snappy-stubs-public.h
