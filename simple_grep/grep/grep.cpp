@@ -100,8 +100,10 @@ process_directory_recursive (const char *dirname, vector<string> &files)
 			if (strcmp(".",dirp->d_name)!=0 &&
 			    strcmp("..",dirp->d_name)!=0) {
 				if (process_directory_recursive (entryname, files)
-			    	< 0)
+			    	< 0) {
+					free (entryname);
 					return -1;
+				}
 			}
 		}
 		free (entryname);
@@ -141,17 +143,30 @@ process_input (const char *pattern, const char *input)
 	return -1;
 }
 
+char *neutralize (char *arg) {
+	if (arg == NULL)
+		return NULL;
+	return arg;
+}
+
 /*
  * MAIN
  */
 int
 main (int argc, char *argv[])
 {
+	char *input;
+
 	/* reading params */
 	if (argc < 3) {
 		cout << "USE " << string (argv[0]) << " pattern input ";
 		cout << endl << flush;
 		return 1;
 	}
-	return process_input (argv[1], argv[2]);
+	input = argv[2];
+	input = neutralize (input);
+	if (input == NULL)
+		return 1;
+
+	return process_input (argv[1], input);
 }

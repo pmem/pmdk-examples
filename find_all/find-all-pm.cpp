@@ -65,21 +65,22 @@ bool pattern_match(const char *str, const char *pattern) {
         strcpy(pmstr.get(), str);                                              \
     }
 
-#define PATH_APPEND(newpath, path, addition)                                   \
-    {                                                                          \
-        newpath = (char *)malloc(strlen(path) + strlen(addition) + 2);         \
-        if (newpath == NULL) {                                                 \
-            cout << "Error number = " << to_string(errno)                      \
-                 << " calling malloc()" << endl;                               \
-            return -1;                                                         \
-        }                                                                      \
-        if (strlen(path) == 0) {                                               \
-            sprintf(newpath, "%s", addition);                                  \
-        } else if (path[strlen(path) - 1] == '/') {                            \
-            sprintf(newpath, "%s%s", path, addition);                          \
-        } else {                                                               \
-            sprintf(newpath, "%s/%s", path, addition);                         \
-        }                                                                      \
+int PATH_APPEND(char **newpath, const char *path, char *addition)                                   
+    {                                                                         
+        *newpath = (char *)malloc(strlen(path) + strlen(addition) + 2);         
+        if (*newpath == NULL) {                                                 
+            cout << "Error number = " << to_string(errno)                      
+                 << " calling malloc()" << endl;                               
+            return -1;                                                         
+        }                                                                      
+        if (strlen(path) == 0) {                                               
+            sprintf(*newpath, "%s", addition);                                  
+        } else if (path[strlen(path) - 1] == '/') {                           
+            sprintf(*newpath, "%s%s", path, addition);                          
+        } else {                                                               
+            sprintf(*newpath, "%s/%s", path, addition);                         
+        }                                                                      
+        return 0;
     }
 
 /* Data types */
@@ -113,17 +114,22 @@ class entry {
         return new_entry;
     }
     int print_matches(const char *pattern) {
+        int rc;
         pobj::persistent_ptr<entry> ptr = this->entries;
         char *newpath;
         while (ptr != nullptr) {
             if (ptr->isdir == false ||
                 pattern_match(ptr->name.get(), pattern)) {
-                PATH_APPEND(newpath, ptr->parent.get(), ptr->name.get());
-                cout << newpath << endl;
+                rc = PATH_APPEND(&newpath, ptr->parent.get(), ptr->name.get());
+                if (!rc)
+                    cout << newpath << endl;
                 free(newpath);
+                if (rc)
+                    return -1;
             }
             if (ptr->isdir)
-                ptr->process_directory(pattern);
+                if ((ptr->process_directory(pattern)))
+                    return -1;
             ptr = ptr->next;
         }
         return 0;
@@ -146,16 +152,21 @@ class entry {
         struct stat st;
         char *path;
         char *newpath;
+        int rc;
 
         if (this->parent == nullptr) {
-            PATH_APPEND(path, "", this->name.get());
+            rc = PATH_APPEND(&path, "", this->name.get());
         } else {
-            PATH_APPEND(path, this->parent.get(), this->name.get());
+            rc = PATH_APPEND(&path, this->parent.get(), this->name.get());
         }
+        if (rc)
+            return -1;
+
         /* Can we open the directory? */
         if ((dp = opendir(path)) == NULL) {
             cout << "Error number = " << to_string(errno) << " opening " << path
                  << endl;
+            free (path);
             return -1;
         }
 
@@ -172,12 +183,19 @@ class entry {
                     strcmp("..", dirp->d_name) == 0)
                     continue;
 
-                PATH_APPEND(newpath, path, dirp->d_name);
+                rc = PATH_APPEND(&newpath, path, dirp->d_name);
+                if (rc) {
+                    free(path);
+                    return -1;
+                }
+
                 /* Is dir? */
                 bool isdir = false;
                 stat(newpath, &st);
                 if (st.st_mode & S_IFDIR)
                     isdir = true;
+
+                free(newpath);
 
                 if (pattern_match(dirp->d_name, pattern) || isdir) {
                     entry *e = this->find_entry(dirp->d_name);
@@ -191,6 +209,7 @@ class entry {
             this->mtime = new_mtime;
             pop.persist(this->mtime);
         }
+        free (path);
         return print_matches(pattern);
     }
 };
@@ -246,21 +265,34 @@ class root {
     }
 };
 
+char *neutralize (char *arg) {
+    if (arg == NULL)
+        return NULL;
+    return arg;
+}
+
 /*
  * MAIN
  */
 int main(int argc, char *argv[]) {
+    char *pmfile;
+
     /* reading params */
     if (argc < 4) {
         cout << "USE " << string(argv[0]) << " pmem-file root-dir pattern";
         cout << endl << flush;
         return 1;
     }
-    if (access(argv[1], F_OK)) /* new file */
+    pmfile = argv[1];
+    pmfile = neutralize (pmfile);
+    if (pmfile == NULL)
+        return 1;
+
+    if (access(pmfile, F_OK)) /* new file */
         pop =
-            pobj::pool<root>::create(argv[1], "FIND-ALL-PM", POOLSIZE, S_IRWXU);
+            pobj::pool<root>::create(pmfile, "FIND-ALL-PM", POOLSIZE, S_IRWXU);
     else /* file exists */
-        pop = pobj::pool<root>::open(argv[1], "FIND-ALL-PM");
+        pop = pobj::pool<root>::open(pmfile, "FIND-ALL-PM");
     auto proot = pop.root(); /* read root structure */
 
     pattern *p = proot->find_pattern(argv[3], argv[2]);

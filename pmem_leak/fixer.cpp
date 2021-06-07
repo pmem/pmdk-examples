@@ -37,25 +37,37 @@ using namespace pmem::obj;
 pool<root> pop;
 
 
+char *neutralize (char *arg) {
+	if (arg == NULL)
+		return NULL;
+	return arg;
+}
+
 /* main */
 int
 main (int argc, char *argv[])
 {
+	char *pmfile;
+
 	/* reading params */
 	if (argc < 2) {
 		cout << "USE " << string (argv[0]) << " pmem-file ";
 		cout << endl << flush;
 		return 1;
 	}
+	pmfile = argv[1];
+	pmfile = neutralize (pmfile);
+	if (pmfile == NULL)
+		return 1;
 
 	/* opening pmem-file */
-	if (access (argv[1], F_OK)) {
-		cout << "pmem-file '" << string (argv[1]) << "' does not "
+	if (access (pmfile, F_OK)) {
+		cout << "pmem-file '" << string (pmfile) << "' does not "
 		                                             "exist.";
 		cout << endl << flush;
 		return 1;
 	}
-	pop = pool<root>::open (argv[1], "PMEMLEAK");
+	pop = pool<root>::open (pmfile, "PMEMLEAK");
 	auto proot = pop.root ();
 
 	/* iterating over all objects... */

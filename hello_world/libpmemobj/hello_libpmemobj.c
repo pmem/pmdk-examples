@@ -74,6 +74,8 @@ void write_hello_string (char *buf, char *path)
 
 	// Pointer for structure at the root
 	struct my_root *rootp = pmemobj_direct(root);
+	if (rootp == NULL)
+		exit(1);
 
 	// Write the string to persistent memory
 
@@ -147,4 +149,5 @@ int main(int argc, char *argv[])
 		exit(1);
 	}
 
+	return 0;
 }

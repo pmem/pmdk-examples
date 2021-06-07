@@ -48,6 +48,8 @@ get_line (const char *input, size_t input_len, size_t offset, string &line)
 	/* we found some characters belonging to a line */
 	if (i > offset) {
 		char *newline = (char *)malloc (sizeof (char) * (i - offset + 1));
+		if (newline == NULL)
+			return 0;
 		memcpy (newline, &input[offset], i - offset);
 		newline[i - offset] = '\0';
 		string newinput (newline);

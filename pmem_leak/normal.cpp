@@ -36,20 +36,32 @@ using namespace pmem::obj;
 pool<root> pop;
 
 
+char *neutralize (char *arg) {
+	if (arg == NULL)
+		return NULL;
+	return arg;
+}
+
 /* main */
 int
 main (int argc, char *argv[])
 {
+	char *pmfile;
+
 	/* reading params */
 	if (argc < 2) {
 		cout << "USE " << string (argv[0]) << " pmem-file ";
 		cout << endl << flush;
 		return 1;
 	}
+	pmfile = argv[1];
+	pmfile = neutralize (pmfile);
+	if (pmfile == NULL)
+		return 1;
 
 	/* creating pmem-file */
-	if (!access (argv[1], F_OK)) { /* file exists, deleting it... */
-		cout << "pmem-file '" << string (argv[1]) << "' exists. ";
+	if (!access (pmfile, F_OK)) { /* file exists, deleting it... */
+		cout << "pmem-file '" << string (pmfile) << "' exists. ";
 		cout << "Do you want to overwrite it? (Y/n) ";
 
 		string input;
@@ -58,7 +70,7 @@ main (int argc, char *argv[])
 			cout << "bye bye" << endl << flush;
 			return 0;
 		}
-		remove (argv[1]);
+		remove (pmfile);
 	}
 	pop = pool<root>::create (argv[1], "PMEMLEAK", POOLSIZE, S_IRWXU);
 	auto proot = pop.root ();

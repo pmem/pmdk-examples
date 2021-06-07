@@ -58,7 +58,7 @@ persistent_string::set (pmem::obj::pool_base &pop, std::string *value)
 				str = nullptr;
 			}
 			pmemobj_tx_add_range_direct (sso, SSO_SIZE);
-			strcpy (sso, value->c_str ());
+			snprintf(sso, sizeof(sso), "%s", value->c_str ());
 		} else {
 			if (str) { /* reset old string */
 				pmem::obj::delete_persistent<char[]> (

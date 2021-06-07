@@ -96,15 +96,28 @@ int process_directory(const char *dirname, const char *pattern) {
     return 0;
 }
 
+char *neutralize (char *arg) {
+    if (arg == NULL)
+        return NULL;
+    return arg;
+}
+
 /*
  * MAIN
  */
 int main(int argc, char *argv[]) {
+    char *dirname;
+
     /* reading params */
     if (argc < 3) {
         cout << "USE " << string(argv[0]) << " root-dir pattern";
         cout << endl << flush;
         return 1;
     }
-    return process_directory(argv[1], argv[2]);
+    dirname = argv[1];
+    dirname = neutralize (dirname);
+    if (dirname == NULL)
+        return 1;
+
+    return process_directory(dirname, argv[2]);
 }

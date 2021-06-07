@@ -33,7 +33,7 @@ SPDX-License-Identifier: BSD-3-Clause
  * FileName : "Hello_llpl.java". 
  */
  
-import lib.llpl.*;
+import com.intel.pmem.llpl.*;
 import java.util.Scanner;
 
 class Hello_llpl
@@ -97,7 +97,8 @@ class Hello_llpl
 		int size;  // String length
 		
 		// Define Heap
-		Heap h = Heap.getHeap("./persistent_heap", 2147483648L);		
+		boolean initialized = Heap.exists("./persistent_heap");
+		Heap h = initialized ? Heap.openHeap("./persistent_heap") : Heap.createHeap("./persistent_heap", 2147483648L);
 		
 		//Initialize the msg string
 		String msg = "Hello Persistent Memory!!!";
@@ -119,7 +120,9 @@ class Hello_llpl
 							"<R> for Read from persistent-memory, or <Q> to Quit: ");
 			
 			//Read the input as a String
-			option = scanner.next();
+			if (scanner.hasNext()) {
+				option = scanner.next();
+			}
 		}
 		
 		switch(option)

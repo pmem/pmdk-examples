@@ -78,6 +78,7 @@ class pattern
     persistent_ptr<char[]> patternstr;
     PMEMoid files_db_index;
     db *files_db;
+    bool started;
 
     static void
     get_mtime_callback (const char *value, size_t vsize, void *args)
@@ -210,7 +211,7 @@ class pattern
         if (f == nullptr)
             throw runtime_error ("Error calling malloc");
 
-        strcpy (f->name, filename);
+        snprintf(f->name, sizeof(f->name), "%s", filename);
         f->mtime          = mtime;
         f->num_lines      = 0;
         f->raw_data_alloc = 0;           
@@ -233,11 +234,11 @@ class pattern
         } else {
             char err[2048];
             sprintf (err, "unable to open file %s", filename);
+            free (f);
             throw runtime_error (err);
         }
 
         put_file (f);
-
         free (f);
     }
 
@@ -246,6 +247,8 @@ class pattern
         patternstr = make_persistent<char[]> (strlen (str) + 1);
         strcpy (patternstr.get (), str);
         files_db_index = OID_NULL;
+        started = false;
+        start();
     }
 
     void
@@ -255,20 +258,26 @@ class pattern
         status ret;
         string objn = string("oid");
 
-        ret = cfg.put_object (objn, &files_db_index, nullptr);
-        assert (ret == status::OK);
+        if (started == false) {
+	    ret = cfg.put_object (objn, &files_db_index, nullptr);
+            assert (ret == status::OK);
 
-        files_db = new db ();
-        assert (files_db != nullptr);
+            files_db = new db ();
+            assert (files_db != nullptr);
 
-        ret = files_db->open ("cmap", move (cfg));
-        assert (ret == status::OK);
+            ret = files_db->open ("cmap", move (cfg));
+            assert (ret == status::OK);
+            started = true;
+        }
     }
 
     void
     stop (void)
     {
-        delete files_db;
+        if (started == true) {
+            delete files_db;
+            started = false;
+        }
     }
 
     persistent_ptr<pattern>
@@ -419,6 +428,12 @@ process_directory (pattern *p, const char *dirname)
         threads[i].join ();
 }
 
+char *neutralize (char *arg) {
+    if (arg == NULL)
+        return NULL;
+    return arg;
+}
+
 /*
  * MAIN
  */
@@ -426,6 +441,8 @@ int
 main (int argc, char *argv[])
 {
     struct stat st;
+    char *pmfile;
+    char *input;
 
     /* reading params */
     if (argc < 2) {
@@ -434,14 +451,18 @@ main (int argc, char *argv[])
         cout << endl << flush;
         return 1;
     }
+    pmfile = argv[1];
+    pmfile = neutralize (pmfile);
+    if (pmfile == NULL)
+        return 1;
 
     try {
 
         /* Opening pmem-file */
-        if (access (argv[1], F_OK)) /* new file */
-            pop = pool<root>::create (argv[1], "PMEMGREP", POOLSIZE, S_IRWXU);
+        if (access (pmfile, F_OK)) /* new file */
+            pop = pool<root>::create (pmfile, "PMEMGREP", POOLSIZE, S_IRWXU);
         else /* file exists */
-            pop = pool<root>::open (argv[1], "PMEMGREP");
+            pop = pool<root>::open (pmfile, "PMEMGREP");
 
         auto proot = pop.root (); /* read root structure */
 
@@ -463,13 +484,18 @@ main (int argc, char *argv[])
                 if (num_threads < 1)
                     num_threads = 1;
 
-                if (stat (argv[3], &st) == 0) {
+                input = argv[3];
+                input = neutralize (input);
+                if (input == NULL)
+                    return 1;
+
+                if (stat (input, &st) == 0) {
                     if (st.st_mode & S_IFREG)
-                        p->process_file (argv[3], st.st_mtime);
+                        p->process_file (input, st.st_mtime);
                     else if (st.st_mode & S_IFDIR)
-                        process_directory (p, argv[3]);
+                        process_directory (p, input);
                 } else {
-                    cout << string (argv[3]);
+                    cout << string (input);
                     cout << " is not a valid input" << endl;
                 }
             }

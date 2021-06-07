@@ -57,7 +57,9 @@ class Hello_pcj
 		 	System.out.print("\nEnter <W> for Write to persistent-memory, <R> for Read from persistent-memory or <Q> to Quit: ");
 			
 			//Read the input as a String
-			option = scanner.next();
+			if (scanner.hasNext()) {
+				option = scanner.next();
+			}
 		}
 		switch(option)
 		{	case "W":

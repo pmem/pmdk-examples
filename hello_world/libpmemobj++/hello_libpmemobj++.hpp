@@ -65,8 +65,8 @@ class Hello
 
 	public:
 	Hello (char* input)
-	{ 
-			strcpy(msg,input);
+	{
+		snprintf(msg, sizeof(msg), "%s", input);
 	}
 
 	char* get_hello_msg ()

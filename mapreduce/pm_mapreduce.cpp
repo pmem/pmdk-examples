@@ -209,7 +209,7 @@ pm_mapreduce::print_job_progress (void)
 	int map, reduce;
 	static char msg[] = "0%% map  0%% reduce              ";
 	get_job_progress (map, reduce);
-	sprintf (msg, "%d%% map  %d%% reduce", map, reduce);
+	snprintf (msg, sizeof(msg), "%d%% map  %d%% reduce", map, reduce);
 	fprintf (stdout, "%s\r", msg);
 	fflush (stdout);
 }
@@ -513,19 +513,16 @@ pm_mapreduce::process_map_task (pmem::obj::persistent_ptr<list_entry> tsk)
 void
 pm_mapreduce::map_thread (void)
 {
+	bool all_map_done = false;
 
-	while (true) /* Active thread loop */
+	while (all_map_done == false) /* Active thread loop */
 	{
-		bool all_map_done = false;
 		pmem::obj::persistent_ptr<list_entry> tsk;
 
 		ret_available_map_task (tsk, all_map_done);
 
 		if (tsk != nullptr)
 			process_map_task (tsk);
-
-		if (all_map_done == true)
-			break;
 	}
 }
 
@@ -693,18 +690,16 @@ pm_mapreduce::process_red_tasks (pmem::obj::persistent_ptr<list_entry> tsk[2],
 void
 pm_mapreduce::reduce_thread (void)
 {
-	while (true) /* Active thread loop */
+	bool all_done = false;
+
+	while (all_done == false) /* Active thread loop */
 	{
 		bool only_one_left = false;
-		bool all_done = false;
 		pmem::obj::persistent_ptr<list_entry> tsk[2];
 
 		ret_available_red_task (tsk, only_one_left, all_done);
 
 		if (tsk[0] != nullptr)
 			process_red_tasks (tsk, only_one_left);
-
-		if (all_done == true)
-			break;
 	}
 }
